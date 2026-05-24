@@ -4,6 +4,9 @@ TechTO Tangerine Research Summary
 Source board:
 https://www.figma.com/board/Azt0J2gZpTTPoA7gg8Yjek/TechTO?node-id=0-1&t=hrSVHKbvCYfbJRKD-1
 
+Competition reference:
+https://www.notion.so/TechTO-Hackathon-May-24-2026-366e0e6c336a806fb311d9f0961164c4
+
 Status:
 Draft summary created from the visible FigJam board screenshot. The raw FigJam text
 still could not be accessed through the Figma integration, so this should be treated
@@ -35,6 +38,20 @@ Research summary:
 - Open questions include which target user segment should be prioritized first,
   what financial moment matters most, how much guidance should be automated, and
   how Tangerine can build trust without feeling generic or overwhelming.
+
+Hackathon guidance:
+- Build for Track 2: Tangerine - AI Agents to Organize Your Financial Life.
+- The solution should help people understand, organize, and optimize their
+  financial life by reducing stress and improving financial confidence.
+- Strong ideas should go beyond a simple chatbot. The agent should take action,
+  remember context, coordinate tasks, make decisions, or enable workflows.
+- Judging criteria emphasize meaningful real-world problems, creative and
+  delightful experiences, and thoughtful use of AI agents.
+- The demo must include a live demo in the three-minute submission video.
+- All code should be created during the hackathon. Open-source libraries and
+  third-party tools are allowed.
+- Submission deadline is 5pm. Shortlisted teams should be ready for a live demo
+  and Q&A.
 
 Access note:
 To create a more complete summary, use direct FigJam text access or export the
