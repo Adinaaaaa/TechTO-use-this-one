@@ -57,7 +57,8 @@
   .sidebar {
     width: var(--sidebar-w);
     min-height: 100vh;
-    background: var(--text);          /* neutral.dark #3a3835 */
+    background: var(--white);
+    border-right: 1px solid var(--border);
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
@@ -71,7 +72,7 @@
     align-items: center;
     gap: 10px;
     padding: 24px 20px 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid var(--border);
   }
   .sidebar-logo .logo-icon {
     font-size: 1.5rem;
@@ -80,11 +81,11 @@
   .sidebar-logo .logo-text {
     font-size: 1.0625rem;
     font-weight: 700;
-    color: var(--white);
+    color: var(--orange);
   }
   .sidebar-logo .logo-sub {
     font-size: 0.6875rem;
-    color: var(--text-disabled);
+    color: var(--text-secondary);
     margin-top: 1px;
   }
 
@@ -109,9 +110,10 @@
     border-radius: var(--r-lg);
     font-size: 0.9375rem;
     font-weight: 500;
-    color: rgba(255,255,255,0.65);
+    color: var(--text-secondary);
     cursor: pointer;
     border: none;
+    border-left: 3px solid transparent;
     background: none;
     font-family: var(--font);
     width: 100%;
@@ -120,24 +122,24 @@
     margin-bottom: 2px;
   }
   .nav-item:hover {
-    background: rgba(255,255,255,0.07);
-    color: var(--white);
+    background: var(--bg-nav-hover);
+    color: var(--text);
   }
   .nav-item.active {
-    background: var(--orange);        /* brand.orange */
-    color: var(--white);
+    background: var(--orange-pale);
+    color: var(--orange);
+    border-left-color: var(--orange);
     font-weight: 600;
   }
   .nav-item.active:hover {
-    background: var(--orange-hover);
+    background: var(--orange-pale);
   }
-  .nav-item svg { flex-shrink: 0; opacity: 0.8; }
-  .nav-item.active svg { opacity: 1; }
+  .nav-item svg { flex-shrink: 0; }
 
   .sidebar-bottom {
     margin-top: auto;
     padding: 16px 12px;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid var(--border);
   }
   .sidebar-user {
     display: flex;
@@ -147,7 +149,7 @@
     border-radius: var(--r-lg);
     cursor: pointer;
   }
-  .sidebar-user:hover { background: rgba(255,255,255,0.07); }
+  .sidebar-user:hover { background: var(--bg-nav-hover); }
   .avatar {
     width: 34px; height: 34px;
     border-radius: var(--r-full);
@@ -163,11 +165,11 @@
   .sidebar-user-info .name {
     font-size: 0.875rem;
     font-weight: 600;
-    color: var(--white);
+    color: var(--text);
   }
   .sidebar-user-info .plan {
     font-size: 0.6875rem;
-    color: var(--text-disabled);
+    color: var(--text-secondary);
     margin-top: 1px;
   }
 
@@ -282,13 +284,14 @@
   .stat-card {
     background: var(--white);
     border: 1px solid var(--border);
+    border-top: 3px solid var(--border);
     border-radius: var(--r-xl);
     padding: 18px 20px;
     box-shadow: var(--shadow-sm);
   }
-  .stat-card.highlight { border-color: var(--orange-border); background: var(--orange-pale); }
-  .stat-card.danger    { border-color: #f5b7b1;              background: var(--red-bg); }
-  .stat-card.success   { border-color: #a5d6a7;              background: var(--green-bg); }
+  .stat-card.highlight { border-top-color: var(--orange); }
+  .stat-card.danger    { border-top-color: var(--red); }
+  .stat-card.success   { border-top-color: var(--green); }
   .stat-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
   .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--text); line-height: 1; margin-bottom: 4px; }
   .stat-value.green   { color: var(--green); }
@@ -318,7 +321,7 @@
     gap: 10px;
     padding: 14px 20px;
     border-bottom: 1px solid var(--border);
-    background: var(--bg-subtle);
+    background: var(--white);
   }
   .pay-card-header .card-title {
     font-size: 0.6875rem;
@@ -372,7 +375,7 @@
     justify-content: space-between;
     gap: 16px;
     padding: 10px 14px;
-    background: var(--bg-subtle);
+    background: var(--white);
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
     cursor: pointer;
@@ -445,8 +448,8 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    background: var(--bg-subtle);
-    border-top: 1px solid var(--border);
+    background: var(--white);
+    border-top: 2px solid var(--border);
   }
   .total-row .total-label { font-size: 1rem; font-weight: 700; }
   .total-row .total-val { font-size: 1rem; font-weight: 700; color: var(--green); display: flex; align-items: center; gap: 5px; }
