@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tangerine Pathfinder</title>
+<style>
+  :root {
+    --orange: #FF6200;
+    --orange-light: #FF8C42;
+    --orange-pale: #FFF3EC;
+    --orange-border: #FFD5B8;
+    --text: #1A1A1A;
+    --text-muted: #666;
+    --text-light: #999;
+    --bg: #FAF9F7;
+    --white: #FFFFFF;
+    --card-bg: #FFFFFF;
+    --border: #E8E4DF;
+    --green: #1B8A5A;
+    --green-bg: #EAF7F1;
+    --red: #C0392B;
+    --red-bg: #FDF1F0;
+    --yellow: #B8860B;
+    --yellow-bg: #FFFBEC;
+    --radius: 14px;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --shadow-md: 0 4px 24px rgba(0,0,0,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 700;
+    font-size: 18px;
+    color: var(--orange);
+    cursor: pointer;
+  }
+  .nav-logo span { font-size: 22px; }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-lang {
+    font-size: 13px;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+  .nav-icons { display: flex; gap: 12px; }
+  .nav-icon {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--orange-pale);
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* ── SCREEN SYSTEM ── */
+  .screen { display: none; animation: fadeIn 0.25s ease; }
+  .screen.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ── DEV SCREEN NAV ── */
+  .screen-nav {
+    background: #1A1A1A;
+    color: #ccc;
+    padding: 8px 24px;
+    font-size: 11px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .screen-nav span { color: #888; margin-right: 4px; }
+  .screen-nav button {
+    background: #333;
+    color: #ddd;
+    border: none;
+    padding: 3px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+  .screen-nav button.current { background: var(--orange); color: white; }
+
+  /* ── LAYOUT ── */
+  .page { max-width: 480px; margin: 0 auto; padding: 32px 20px 64px; }
+  .page-wide { max-width: 720px; margin: 0 auto; padding: 32px 20px 64px; }
+
+  /* ── TYPOGRAPHY ── */
+  h1 { font-size: 26px; font-weight: 700; line-height: 1.25; margin-bottom: 8px; }
+  h2 { font-size: 20px; font-weight: 700; margin-bottom: 12px; }
+  h3 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+  p { font-size: 15px; line-height: 1.6; color: var(--text-muted); }
+  .muted { color: var(--text-muted); font-size: 14px; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    padding: 13px 24px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+  .btn-primary { background: var(--orange); color: white; width: 100%; }
+  .btn-primary:hover { background: var(--orange-light); }
+  .btn-secondary { background: var(--white); color: var(--text); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--orange); color: var(--orange); }
+  .btn-ghost { background: transparent; color: var(--orange); font-weight: 600; }
+  .btn-outline { background: white; color: var(--orange); border: 1.5px solid var(--orange); }
+  .btn-outline:hover { background: var(--orange-pale); }
+  .btn-sm { padding: 7px 14px; font-size: 13px; border-radius: 8px; }
+  .btn-full { width: 100%; }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+  }
+  .card + .card { margin-top: 12px; }
+  .card-orange {
+    background: var(--orange-pale);
+    border-color: var(--orange-border);
+  }
+  .card-green { background: var(--green-bg); border-color: #A8DFC5; }
+  .card-yellow { background: var(--yellow-bg); border-color: #EDD270; }
+  .card-red { background: var(--red-bg); border-color: #F5B7B1; }
+
+  /* ── BADGES ── */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .badge-orange { background: var(--orange-pale); color: var(--orange); }
+  .badge-green { background: var(--green-bg); color: var(--green); }
+  .badge-red { background: var(--red-bg); color: var(--red); }
+  .badge-yellow { background: var(--yellow-bg); color: var(--yellow); }
+
+  /* ── ALERT BANNER ── */
+  .alert {
+    padding: 12px 18px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 14px;
+  }
+  .alert-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .alert-red { background: var(--red-bg); border: 1px solid #F5B7B1; color: var(--red); }
+  .alert-yellow { background: var(--yellow-bg); border: 1px solid #EDD270; color: #7D6400; }
+  .alert-green { background: var(--green-bg); border: 1px solid #A8DFC5; color: var(--green); }
+
+  /* ── PILL CHOICE ── */
+  .pill-group { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+  .pill {
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .pill:hover { border-color: var(--orange); color: var(--orange); }
+  .pill.selected { background: var(--orange-pale); border-color: var(--orange); color: var(--orange); font-weight: 600; }
+
+  /* ── CHOICE CARDS ── */
+  .choice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 16px 0; }
+  .choice-card {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 14px;
+    cursor: pointer;
+    background: white;
+    transition: all 0.12s;
+    text-align: left;
+  }
+  .choice-card:hover { border-color: var(--orange); }
+  .choice-card.selected { border-color: var(--orange); background: var(--orange-pale); }
+  .choice-card .emoji { font-size: 22px; margin-bottom: 6px; }
+  .choice-card .title { font-size: 14px; font-weight: 600; margin-bottom: 2px; }
+  .choice-card .desc { font-size: 12px; color: var(--text-muted); }
+
+  /* ── PROGRESS BAR ── */
+  .progress-bar { background: var(--border); border-radius: 4px; height: 6px; margin: 16px 0; }
+  .progress-fill { background: var(--orange); border-radius: 4px; height: 100%; transition: width 0.3s; }
+
+  /* ── STEP DOTS ── */
+  .step-dots { display: flex; gap: 8px; margin-bottom: 24px; }
+  .step-dot {
+    width: 28px; height: 6px;
+    border-radius: 3px;
+    background: var(--border);
+  }
+  .step-dot.active { background: var(--orange); }
+  .step-dot.done { background: var(--orange-light); }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+
+  /* ── SECTION LABEL ── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+    margin-bottom: 12px;
+  }
+
+  /* ── TOGGLE ── */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toggle-row:last-child { border-bottom: none; }
+  .toggle-info h4 { font-size: 14px; font-weight: 600; }
+  .toggle-info p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+  .toggle {
+    width: 42px; height: 24px;
+    background: var(--border);
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--orange); }
+  .toggle::after {
+    content: '';
+    width: 18px; height: 18px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+    top: 3px; left: 3px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle.on::after { transform: translateX(18px); }
+
+  /* ── PAYCHEQUE TABLE ── */
+  .pay-table { width: 100%; }
+  .pay-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .pay-row:last-child { border-bottom: none; }
+  .pay-row.total { font-weight: 700; font-size: 15px; padding-top: 12px; }
+  .pay-row .label { color: var(--text); }
+  .pay-row .amount { font-weight: 600; font-family: 'SF Mono', monospace; }
+  .pay-row .amount.deduct { color: var(--red); }
+  .pay-row .amount.total-val { color: var(--green); }
+  .pay-row .info-btn {
+    font-size: 11px;
+    color: var(--orange);
+    background: var(--orange-pale);
+    border: none;
+    padding: 2px 7px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 8px;
+    white-space: nowrap;
+  }
+
+  /* ── ROADMAP ── */
+  .roadmap-phase { margin-bottom: 28px; }
+  .phase-label {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--border);
+  }
+  .phase-label.urgent { color: var(--orange); border-color: var(--orange-border); }
+  .roadmap-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .roadmap-item:last-child { border-bottom: none; }
+  .roadmap-check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px;
+    transition: all 0.15s;
+    margin-top: 1px;
+  }
+  .roadmap-check.done { background: var(--green); border-color: var(--green); color: white; }
+  .roadmap-check.urgent { border-color: var(--orange); }
+  .roadmap-text h4 { font-size: 14px; font-weight: 600; }
+  .roadmap-text p { font-size: 13px; color: var(--text-muted); margin-top: 2px; }
+
+  /* ── RRSP STEPS ── */
+  .walkthrough-steps {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 24px;
+  }
+  .ws { flex: 1; height: 6px; border-radius: 3px; background: var(--border); }
+  .ws.active { background: var(--orange); }
+  .ws.done { background: var(--orange-light); }
+
+  .calc-box {
+    background: var(--orange-pale);
+    border: 1px solid var(--orange-border);
+    border-radius: 12px;
+    padding: 16px;
+    margin: 16px 0;
+  }
+  .calc-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 5px 0;
+  }
+  .calc-row.highlight { font-weight: 700; font-size: 15px; color: var(--orange); margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--orange-border); }
+  .calc-row .free-badge {
+    background: var(--green-bg);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 4px;
+  }
+
+  /* ── DASHBOARD GRID ── */
+  .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px; }
+  .dash-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+  .dash-card .icon { font-size: 24px; margin-bottom: 8px; }
+  .dash-card h3 { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 4px; }
+  .dash-card .value { font-size: 22px; font-weight: 700; margin-bottom: 2px; }
+  .dash-card .sub { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .dash-card .dash-btn {
+    font-size: 12px;
+    color: var(--orange);
+    font-weight: 600;
+    background: var(--orange-pale);
+    border: none;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+  }
+  .dash-card.urgent-card { border-color: var(--orange); background: var(--orange-pale); }
+  .dash-card.urgent-card .value { color: var(--orange); }
+
+  /* ── PROMPT CHIPS ── */
+  .prompt-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 9px 14px;
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.12s;
+  }
+  .chip:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-pale); }
+
+  /* ── LANDING HERO ── */
+  .hero {
+    text-align: center;
+    padding: 40px 0 32px;
+  }
+  .hero-logo { font-size: 56px; margin-bottom: 16px; }
+  .hero h1 { font-size: 28px; line-height: 1.2; margin-bottom: 8px; }
+  .hero p { font-size: 16px; color: var(--text-muted); max-width: 340px; margin: 0 auto 28px; }
+  .trust-pills {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+  .trust-pill {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--text-muted);
+    background: white;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 5px 12px;
+  }
+
+  /* ── LINK OPTION ── */
+  .link-option {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 16px;
+    margin-bottom: 10px;
+  }
+  .link-option-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .link-icon { font-size: 28px; flex-shrink: 0; }
+  .link-info h4 { font-size: 15px; font-weight: 600; margin-bottom: 3px; }
+  .link-info p { font-size: 13px; color: var(--text-muted); }
+  .link-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  /* ── NEVER LIST ── */
+  .never-list { list-style: none; padding: 0; }
+  .never-list li {
+    padding: 6px 0;
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .never-list li::before { content: '✕'; color: var(--red); font-weight: 700; font-size: 12px; margin-top: 2px; }
+
+  /* ── BOTTOM NAV ── */
+  .bottom-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 32px;
+    gap: 12px;
+  }
+  .bottom-nav .btn { flex: 1; }
+
+  /* ── REPORT FLAG ── */
+  .flag-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--orange);
+    border-radius: 0 14px 14px 0;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+  .flag-card.urgent { border-left-color: var(--red); }
+  .flag-card.good { border-left-color: var(--green); }
+  .flag-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .flag-body { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+  .flag-source { font-size: 11px; color: var(--text-light); margin-bottom: 8px; }
+
+  /* ── SETTINGS ── */
+  .settings-section { margin-bottom: 28px; }
+  .settings-section h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-light); margin-bottom: 12px; }
+  .settings-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+  .settings-row:last-child { border-bottom: none; }
+  .settings-row .label { font-weight: 500; }
+  .settings-row .value { color: var(--text-muted); }
+  .settings-row .action {
+    color: var(--orange);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: none;
+    border: none;
+  }
+
+  /* ── QUIZ SECTION ── */
+  .quiz-section { margin-bottom: 28px; }
+  .quiz-section h3 { font-size: 16px; font-weight: 600; margin-bottom: 14px; }
+  .quiz-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px; height: 22px;
+    background: var(--orange);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  /* ── CHECKBOX GRID ── */
+  .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .check-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    background: white;
+    transition: all 0.12s;
+    user-select: none;
+  }
+  .check-pill.selected { background: var(--orange-pale); border-color: var(--orange); color: var(--orange); }
+  .check-pill .box {
+    width: 16px; height: 16px;
+    border: 1.5px solid var(--border);
+    border-radius: 4px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+  .check-pill.selected .box { background: var(--orange); border-color: var(--orange); color: white; }
+
+  /* ── CHIP TOOLTIP ── */
+  .tooltip-box {
+    background: #1A1A1A;
+    color: white;
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    margin-top: 8px;
+    line-height: 1.5;
+    display: none;
+  }
+  .tooltip-box.show { display: block; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 480px) {
+    .dash-grid { grid-template-columns: 1fr; }
+    .choice-grid { grid-template-columns: 1fr; }
+    .checkbox-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── DEV SCREEN SWITCHER ── -->
+<div class="screen-nav" id="screenNav">
+  <span>Jump to:</span>
+  <button onclick="showScreen('landing')" id="btn-landing">1 Landing</button>
+  <button onclick="showScreen('quiz')" id="btn-quiz">2 Quiz</button>
+  <button onclick="showScreen('link')" id="btn-link">3 Link</button>
+  <button onclick="showScreen('dashboard')" id="btn-dashboard">4 Dashboard</button>
+  <button onclick="showScreen('report')" id="btn-report">5 Report</button>
+  <button onclick="showScreen('rrsp')" id="btn-rrsp">6 RRSP</button>
+  <button onclick="showScreen('roadmap')" id="btn-roadmap">7 Roadmap</button>
+  <button onclick="showScreen('settings')" id="btn-settings">8 Settings</button>
+</div>
+
+<!-- ── TOP NAV ── -->
+<nav>
+  <div class="nav-logo" onclick="showScreen('landing')">
+    <span>🍊</span> Pathfinder
+  </div>
+  <div class="nav-right">
+    <div class="nav-lang">EN | FR</div>
+    <div class="nav-icons" id="navIcons" style="display:none">
+      <button class="nav-icon" onclick="showScreen('settings')" title="Settings">⚙️</button>
+      <button class="nav-icon" title="Notifications">🔔</button>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN 1 · LANDING
+════════════════════════════════════════════════════ -->
+<div class="screen active" id="screen-landing">
+  <div class="page">
+    <div class="hero">
+      <div class="hero-logo">🍊</div>
+      <h1>Your first job.<br>Your first paycheque.</h1>
+      <p>Let's make sense of it all — no jargon, no upselling, no judgment.</p>
+      <div class="trust-pills">
+        <div class="trust-pill">✓ Plain language</div>
+        <div class="trust-pill">✓ No upselling</div>
+        <div class="trust-pill">✓ You're in control</div>
+      </div>
+    </div>
+
+    <div class="card card-orange" style="margin-bottom:16px">
+      <p style="color:var(--text); font-size:15px; line-height:1.7">
+        Got your first Canadian paycheque and not sure where the money went? Pathfinder walks you through every deduction, every fee, and every next step — and builds you a clear 90-day financial roadmap.
+      </p>
+    </div>
+
+    <button class="btn btn-primary" style="margin-bottom:12px" onclick="showScreen('quiz')">
+      Build my first financial roadmap →
+    </button>
+    <button class="btn btn-secondary btn-full" onclick="showScreen('dashboard')">
+      See a sample (Angel's demo)
+    </button>
+
+    <p style="text-align:center;margin-top:20px;font-size:13px">
+      Already have an account? <a href="#" style="color:var(--orange);font-weight:600">Sign in</a>
+    </p>
+
+    <hr class="divider">
+    <div style="display:flex;gap:20px;justify-content:center;text-align:center">
+      <div>
+        <div style="font-size:24px;font-weight:700;color:var(--orange)">$1,944</div>
+        <div class="muted">avg. free employer<br>RRSP match missed</div>
+      </div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div>
+        <div style="font-size:24px;font-weight:700;color:var(--orange)">$203</div>
+        <div class="muted">avg. unnecessary<br>bank fees per year</div>
+      </div>
+      <div style="width:1px;background:var(--border)"></div>
+      <div>
+        <div style="font-size:24px;font-weight:700;color:var(--orange)">90</div>
+        <div class="muted">days to a clear<br>financial plan</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN 2 · QUIZ
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-quiz">
+  <div class="page">
+    <div class="step-dots">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div id="quiz-step-1">
+      <h2>A few quick questions</h2>
+      <p style="margin-bottom:24px">So I can build a plan that actually fits your life — not a generic checklist.</p>
+
+      <div class="quiz-section">
+        <h3><span class="quiz-number">1</span>How comfortable are you with Canadian finances?</h3>
+        <div class="choice-grid">
+          <div class="choice-card" onclick="selectChoice(this, 'level', 'starter')">
+            <div class="emoji">🌱</div>
+            <div class="title">Just getting started</div>
+            <div class="desc">"I have lots of questions"</div>
+          </div>
+          <div class="choice-card" onclick="selectChoice(this, 'level', 'basics')">
+            <div class="emoji">📚</div>
+            <div class="title">Know some basics</div>
+            <div class="desc">"I know what a TFSA is"</div>
+          </div>
+          <div class="choice-card" onclick="selectChoice(this, 'level', 'comfortable')">
+            <div class="emoji">💼</div>
+            <div class="title">Pretty comfortable</div>
+            <div class="desc">"I just need specific help"</div>
+          </div>
+          <div class="choice-card" onclick="selectChoice(this, 'level', 'expert')">
+            <div class="emoji">🎓</div>
+            <div class="title">I know my stuff</div>
+            <div class="desc">"Show me the details"</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="goQuizStep(2)">Continue →</button>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="quiz-step-2" style="display:none">
+      <h2>Tell me about you</h2>
+      <p style="margin-bottom:20px">Choose all that apply to you right now.</p>
+
+      <div class="quiz-section">
+        <h3><span class="quiz-number">2</span>Which describes you?</h3>
+        <div class="pill-group">
+          <div class="pill" onclick="togglePill(this)">🌏 Newcomer to Canada</div>
+          <div class="pill" onclick="togglePill(this)">🎓 New grad</div>
+          <div class="pill" onclick="togglePill(this)">💼 Starting first job</div>
+          <div class="pill" onclick="togglePill(this)">🏠 First home buyer</div>
+          <div class="pill" onclick="togglePill(this)">👨‍👩‍👧 Supporting family</div>
+          <div class="pill" onclick="togglePill(this)">Other</div>
+        </div>
+      </div>
+
+      <div class="quiz-section">
+        <h3><span class="quiz-number">3</span>What matters most to you? (pick all that apply)</h3>
+        <div class="checkbox-grid">
+          <div class="check-pill" onclick="toggleCheck(this)"><span class="box"></span>Stop paying bank fees</div>
+          <div class="check-pill" onclick="toggleCheck(this)"><span class="box"></span>Build emergency fund</div>
+          <div class="check-pill" onclick="toggleCheck(this)"><span class="box"></span>Improve my credit</div>
+          <div class="check-pill" onclick="toggleCheck(this)"><span class="box"></span>Capture RRSP match</div>
+          <div class="check-pill" onclick="toggleCheck(this)"><span class="box"></span>Save for a home</div>
+          <div class="check-pill" onclick="toggleCheck(this)"><span class="box"></span>Send money home</div>
+          <div class="check-pill" onclick="toggleCheck(this)"><span class="box"></span>Pay down debt</div>
+          <div class="check-pill" onclick="toggleCheck(this)"><span class="box"></span>Prepare for taxes</div>
+        </div>
+      </div>
+
+      <div style="background:var(--orange-pale);border:1px solid var(--orange-border);border-radius:12px;padding:14px;margin:16px 0">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="font-size:14px;font-weight:600">🌐 Want answers in simpler language?</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:3px">Avoid jargon — explain things like I'm new to all this</div>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')" id="plainToggle"></div>
+        </div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="btn btn-secondary" onclick="goQuizStep(1)">← Back</button>
+        <button class="btn btn-primary" onclick="showScreen('link')">Continue →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN 3 · LINK + TRUST
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-link">
+  <div class="page">
+    <h2 style="margin-bottom:6px">Want a more accurate plan?</h2>
+    <p style="margin-bottom:24px">Linking is completely optional. You can always skip and use sample data.</p>
+
+    <div class="link-option">
+      <div class="link-option-header">
+        <div class="link-icon">🏦</div>
+        <div class="link-info">
+          <h4>Link my bank account</h4>
+          <p>Helps me spot hidden fees and suggest better account options. Read-only access — I can never move money.</p>
+        </div>
+      </div>
+      <div class="link-actions">
+        <button class="btn btn-outline btn-sm">Connect securely</button>
+      </div>
+    </div>
+
+    <div class="link-option">
+      <div class="link-option-header">
+        <div class="link-icon">💼</div>
+        <div class="link-info">
+          <h4>Link payroll or upload T4</h4>
+          <p>Helps me explain your exact deductions — not estimates.</p>
+        </div>
+      </div>
+      <div class="link-actions">
+        <button class="btn btn-outline btn-sm">Connect</button>
+        <button class="btn btn-secondary btn-sm">Upload PDF</button>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="card" style="margin-bottom:16px">
+      <h3 style="margin-bottom:12px;font-size:15px">🔒 What I will never do</h3>
+      <ul class="never-list">
+        <li>Move money or make transactions on your behalf</li>
+        <li>Share your data with advertisers or third parties</li>
+        <li>Remember anything you ask me to forget</li>
+        <li>Recommend products I earn commission from</li>
+      </ul>
+    </div>
+
+    <button class="btn btn-primary" style="margin-bottom:10px" onclick="showScreen('dashboard')">
+      Use Angel's sample data →
+    </button>
+    <button class="btn btn-secondary btn-full" onclick="showScreen('dashboard')">
+      I'll link accounts later
+    </button>
+
+    <p style="text-align:center;font-size:12px;color:var(--text-light);margin-top:16px">
+      You can change your linking preferences any time in Settings.
+    </p>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN 4 · DASHBOARD
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-dashboard">
+  <div class="page">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+      <div>
+        <div style="font-size:13px;color:var(--text-muted)">Welcome back,</div>
+        <h2 style="margin:0">Hi Angel 👋</h2>
+      </div>
+      <div class="badge badge-orange">Sample data</div>
+    </div>
+
+    <div class="alert alert-red" style="margin-bottom:20px">
+      <div class="alert-icon">🚨</div>
+      <div>
+        <strong>RRSP match deadline in 18 days</strong><br>
+        <span style="font-size:13px">You could miss up to $1,944 of free employer money.</span>
+        <div style="margin-top:6px">
+          <button class="btn btn-sm btn-outline" onclick="showScreen('rrsp')">Start RRSP walkthrough →</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dash-grid">
+      <div class="dash-card">
+        <div class="icon">💰</div>
+        <h3>Take-home pay</h3>
+        <div class="value">$2,418</div>
+        <div class="sub">of $3,240 gross</div>
+        <button class="dash-btn" onclick="showScreen('report')">Explain this →</button>
+      </div>
+      <div class="dash-card urgent-card">
+        <div class="icon">🏦</div>
+        <h3>Bank fees</h3>
+        <div class="value">$16.95</div>
+        <div class="sub">per month — avoidable</div>
+        <button class="dash-btn" onclick="showScreen('report')">Free options →</button>
+      </div>
+      <div class="dash-card">
+        <div class="icon">💳</div>
+        <h3>Credit card</h3>
+        <div class="value">$0</div>
+        <div class="sub">rewards on $1,800/mo spend</div>
+        <button class="dash-btn" onclick="showScreen('report')">Better options →</button>
+      </div>
+      <div class="dash-card urgent-card">
+        <div class="icon">📈</div>
+        <h3>RRSP match</h3>
+        <div class="value">$1,944</div>
+        <div class="sub">⚠ free from employer/yr</div>
+        <button class="dash-btn" onclick="showScreen('rrsp')">Walkthrough →</button>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:12px;cursor:pointer" onclick="showScreen('roadmap')">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <h3 style="margin:0">🗺 Your 90-day roadmap</h3>
+        <span style="color:var(--orange);font-size:13px;font-weight:600">See all →</span>
+      </div>
+      <div style="background:var(--border);border-radius:4px;height:8px;margin-bottom:6px">
+        <div style="background:var(--orange);border-radius:4px;height:100%;width:8%"></div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted)">1 of 12 steps complete · Est. $2,100+ savings by day 90</div>
+    </div>
+
+    <div class="card card-orange">
+      <h3 style="margin-bottom:12px;font-size:14px;font-weight:600">💬 Ask Pathfinder</h3>
+      <div class="prompt-chips">
+        <div class="chip" onclick="showChipReply(this)">What should I do first?</div>
+        <div class="chip" onclick="showChipReply(this)">Explain my deductions</div>
+        <div class="chip" onclick="showChipReply(this)">What's a TFSA?</div>
+        <div class="chip" onclick="showChipReply(this)">What could hurt my credit?</div>
+        <div class="chip" onclick="showChipReply(this)">Simplest option for me</div>
+      </div>
+      <div class="tooltip-box" id="chipReply"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN 5 · INITIAL REPORT
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-report">
+  <div class="page">
+    <h2 style="margin-bottom:4px">Your first paycheque, explained</h2>
+    <p style="margin-bottom:20px">Based on Angel's sample data · May 2026</p>
+
+    <div class="card" style="margin-bottom:20px">
+      <div class="pay-table">
+        <div class="pay-row">
+          <span class="label">Gross pay (bi-weekly)</span>
+          <span class="amount">$3,240.00</span>
+        </div>
+        <div class="pay-row">
+          <span class="label">
+            CPP contributions
+            <button class="info-btn" onclick="showTooltip('cpp')">What's this? ⓘ</button>
+          </span>
+          <span class="amount deduct">−$163.20</span>
+        </div>
+        <div class="pay-row">
+          <span class="label">
+            EI premiums
+            <button class="info-btn" onclick="showTooltip('ei')">What's this? ⓘ</button>
+          </span>
+          <span class="amount deduct">−$57.10</span>
+        </div>
+        <div class="pay-row">
+          <span class="label">
+            Federal income tax
+            <button class="info-btn" onclick="showTooltip('fed')">What's this? ⓘ</button>
+          </span>
+          <span class="amount deduct">−$486.00</span>
+        </div>
+        <div class="pay-row">
+          <span class="label">
+            Ontario provincial tax
+            <button class="info-btn" onclick="showTooltip('prov')">What's this? ⓘ</button>
+          </span>
+          <span class="amount deduct">−$115.70</span>
+        </div>
+        <div class="pay-row total">
+          <span class="label">✓ Take-home pay</span>
+          <span class="amount total-val">$2,418.00</span>
+        </div>
+      </div>
+      <div class="tooltip-box" id="payTooltip"></div>
+    </div>
+
+    <div class="alert alert-green" style="margin-bottom:12px">
+      <div class="alert-icon">✓</div>
+      <div><strong>This is normal.</strong> You're keeping about 74.6% of your gross pay — that's typical for this income level in Ontario.</div>
+    </div>
+
+    <div class="flag-card" style="margin-bottom:12px">
+      <div class="flag-title">⚠ Bank fees: $16.95/month</div>
+      <div class="flag-body">
+        Your student chequing account now charges a monthly fee since you graduated. That's <strong>$203/year</strong> for the same service you can get for free. A Tangerine no-fee chequing account includes unlimited e-transfers, a debit card, and no minimum balance — all at $0/month.
+      </div>
+      <div class="flag-source">Source: Tangerine account comparison, May 2026</div>
+      <button class="btn btn-outline btn-sm" onclick="showScreen('roadmap')">See how to switch →</button>
+    </div>
+
+    <div class="flag-card" style="margin-bottom:12px">
+      <div class="flag-title">💳 Credit card: missing ~$270/year in rewards</div>
+      <div class="flag-body">
+        You're spending about $1,800/month with no rewards card. A 2% cash-back card on groceries and transit could return an estimated <strong>$270/year</strong> — money you're currently leaving on the table.
+      </div>
+      <div class="flag-source">Source: Ratehub card comparison tool, May 2026</div>
+      <button class="btn btn-outline btn-sm">Compare card options →</button>
+    </div>
+
+    <div class="flag-card urgent" style="margin-bottom:20px">
+      <div class="flag-title">🚨 Urgent: RRSP match deadline in 18 days</div>
+      <div class="flag-body">
+        Your employer matches up to 3% of your salary in RRSP contributions. That's up to <strong>$1,944/year</strong> in free money — a 100% instant return. Deadline to enrol: <strong>June 11, 2026</strong>. Missing this cannot be undone for this period.
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="showScreen('rrsp')" style="width:auto">Start RRSP walkthrough →</button>
+    </div>
+
+    <button class="btn btn-secondary btn-full" onclick="showScreen('dashboard')">← Back to dashboard</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN 6 · RRSP WALKTHROUGH
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-rrsp">
+  <div class="page">
+    <div style="margin-bottom:6px">
+      <div class="badge badge-red">⏰ 18 days left</div>
+    </div>
+    <h2 style="margin-bottom:4px">RRSP matching walkthrough</h2>
+    <p style="margin-bottom:16px">I'll guide you through every step. You make the final decision.</p>
+
+    <div class="walkthrough-steps" id="rrspSteps">
+      <div class="ws active"></div>
+      <div class="ws"></div>
+      <div class="ws"></div>
+      <div class="ws"></div>
+      <div class="ws"></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div id="rrsp-step-1">
+      <h3>What your employer is offering</h3>
+
+      <div class="calc-box">
+        <div class="calc-row"><span>Your annual salary</span><span>$64,800</span></div>
+        <div class="calc-row"><span>Employer match rate</span><span>3%</span></div>
+        <div class="calc-row"><span>Max employer contribution</span><span>$1,944 / yr <span class="free-badge">FREE</span></span></div>
+        <div class="calc-row"><span>Your required contribution</span><span>$1,944 / yr</span></div>
+        <div class="calc-row"><span style="color:var(--text-muted);font-size:13px">= per bi-weekly paycheque</span><span style="color:var(--text-muted)">$162</span></div>
+        <div class="calc-row highlight"><span>Total invested / year</span><span>$3,888</span></div>
+      </div>
+
+      <div class="alert alert-green">
+        <div class="alert-icon">💡</div>
+        <div>Think of this as a <strong>100% instant return</strong>. For every $162 you contribute, your employer adds another $162 — instantly. Missing the deadline means leaving that on the table permanently for this period.</div>
+      </div>
+
+      <div class="card" style="margin-top:16px;margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;cursor:pointer" onclick="toggleRRSPRoom()">
+          <h4 style="font-size:14px">ℹ What is RRSP contribution room?</h4>
+          <span style="color:var(--orange);font-size:13px" id="roomToggleLabel">Explain in plain language ↓</span>
+        </div>
+        <div id="rrspRoomExplain" style="display:none">
+          <p style="font-size:13px;margin-bottom:12px">Every year, the CRA gives you a limit on how much you can put into your RRSP. It grows at 18% of last year's income. Think of it as a bucket — once it's full for the year, you can't add more.</p>
+          <div class="calc-box" style="margin-top:0">
+            <div class="calc-row"><span>Your 2026 RRSP room (est.)</span><span>$11,664</span></div>
+            <div class="calc-row"><span>This contribution uses</span><span>$1,944</span></div>
+            <div class="calc-row highlight"><span>Room remaining after</span><span>$9,720 ✓</span></div>
+          </div>
+          <div class="alert alert-green" style="margin-top:8px">
+            <div class="alert-icon">✓</div>
+            <div>You have plenty of room — this contribution is safe.</div>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="goRRSPStep(2)">Next: Choose a fund →</button>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="rrsp-step-2" style="display:none">
+      <h3>Choose where your RRSP goes</h3>
+      <p style="margin-bottom:16px">Your employer plan likely offers a few fund options. Here's a plain-language guide to the most common choices.</p>
+
+      <div class="choice-grid" style="margin-bottom:16px">
+        <div class="choice-card selected" onclick="selectChoice(this, 'fund', 'target')">
+          <div class="emoji">🎯</div>
+          <div class="title">Target date fund</div>
+          <div class="desc">Automatically adjusts as you age. Lowest effort. Good for most first-timers.</div>
+        </div>
+        <div class="choice-card" onclick="selectChoice(this, 'fund', 'balanced')">
+          <div class="emoji">⚖️</div>
+          <div class="title">Balanced fund</div>
+          <div class="desc">Mix of stocks and bonds. Moderate risk and return.</div>
+        </div>
+        <div class="choice-card" onclick="selectChoice(this, 'fund', 'index')">
+          <div class="emoji">📊</div>
+          <div class="title">Index fund</div>
+          <div class="desc">Low fees, tracks the market. Good long-term choice.</div>
+        </div>
+        <div class="choice-card" onclick="selectChoice(this, 'fund', 'unsure')">
+          <div class="emoji">❓</div>
+          <div class="title">Not sure yet</div>
+          <div class="desc">I can explain the tradeoffs and help you decide.</div>
+        </div>
+      </div>
+
+      <div class="alert alert-yellow">
+        <div class="alert-icon">⚠</div>
+        <div><strong>Important:</strong> Pathfinder can explain options, but cannot make investment choices for you. Review the fund fact sheets in your employer's enrolment portal before deciding.</div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="btn btn-secondary" onclick="goRRSPStep(1)">← Back</button>
+        <button class="btn btn-primary" onclick="goRRSPStep(3)">Next: Enrolment form →</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="rrsp-step-3" style="display:none">
+      <h3>Filling in the enrolment form</h3>
+      <p style="margin-bottom:16px">Here's what each field means — in plain language.</p>
+
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">Contribution %</div>
+        <div style="font-size:14px;margin-bottom:4px">Enter <strong>3%</strong> to capture the full employer match</div>
+        <div style="font-size:12px;color:var(--text-muted)">You can increase this later, but 3% is the minimum to get the full free match.</div>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">Investment selection</div>
+        <div style="font-size:14px;margin-bottom:4px">Select your chosen fund (e.g. <strong>Target Date 2060 Fund</strong>)</div>
+        <div style="font-size:12px;color:var(--text-muted)">This is the fund you chose in the previous step.</div>
+      </div>
+      <div class="card" style="margin-bottom:10px">
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">Beneficiary</div>
+        <div style="font-size:14px;margin-bottom:4px">Name a person who receives the funds if something happens to you</div>
+        <div style="font-size:12px;color:var(--text-muted)">This can be a parent or trusted family member. You can change it later.</div>
+      </div>
+      <div class="card" style="margin-bottom:20px">
+        <div style="font-size:13px;font-weight:700;color:var(--text-muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em">Signature + Submit</div>
+        <div style="font-size:14px;margin-bottom:4px">Review and submit the form yourself through HR or the plan portal</div>
+        <div style="font-size:12px;color:var(--text-muted)">Pathfinder cannot submit this for you — this is a legal document that only you can sign.</div>
+      </div>
+
+      <div class="alert alert-yellow">
+        <div class="alert-icon">📋</div>
+        <div>You must submit this through your employer's HR portal or contact HR directly. Deadline: <strong>June 11, 2026</strong>.</div>
+      </div>
+
+      <div class="bottom-nav">
+        <button class="btn btn-secondary" onclick="goRRSPStep(2)">← Back</button>
+        <button class="btn btn-primary" onclick="goRRSPStep(4)">I've submitted it ✓</button>
+      </div>
+    </div>
+
+    <!-- Step 4 (done) -->
+    <div id="rrsp-step-4" style="display:none;text-align:center;padding:32px 0">
+      <div style="font-size:64px;margin-bottom:16px">🎉</div>
+      <h2 style="margin-bottom:8px">RRSP enrolment complete!</h2>
+      <p style="margin-bottom:24px">You've secured up to <strong style="color:var(--orange)">$1,944/year</strong> in free employer contributions. That's the biggest financial win of your first year.</p>
+      <div class="card card-green" style="text-align:left;margin-bottom:20px">
+        <div style="font-weight:600;margin-bottom:8px">✓ What happens next</div>
+        <div style="font-size:13px;color:var(--text-muted);line-height:1.8">
+          • $162 will be deducted from each paycheque<br>
+          • Your employer adds $162 automatically<br>
+          • You'll see it on your next pay stub<br>
+          • Your RRSP contribution reduces your taxable income
+        </div>
+      </div>
+      <button class="btn btn-primary btn-full" onclick="showScreen('roadmap')">See your updated roadmap →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN 7 · ROADMAP
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-roadmap">
+  <div class="page">
+    <h2 style="margin-bottom:4px">Your 90-day roadmap</h2>
+    <p style="margin-bottom:16px">Tap a step to mark it complete.</p>
+
+    <div class="card" style="margin-bottom:20px">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="font-size:13px;font-weight:600">Overall progress</span>
+        <span style="font-size:13px;color:var(--orange);font-weight:600" id="progressLabel">1 / 12 steps</span>
+      </div>
+      <div class="progress-bar" style="margin:8px 0">
+        <div class="progress-fill" id="progressFill" style="width:8%"></div>
+      </div>
+      <div style="font-size:12px;color:var(--text-muted)">Est. savings by day 90: <strong style="color:var(--green)">$2,147+</strong> (fees saved + RRSP match)</div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-label urgent">This week (urgent)</div>
+      <div class="roadmap-item">
+        <div class="roadmap-check done">✓</div>
+        <div class="roadmap-text">
+          <h4>Understand your first paycheque</h4>
+          <p>You now know where every dollar goes.</p>
+        </div>
+      </div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check urgent"></div>
+        <div class="roadmap-text">
+          <h4>Enrol in RRSP matching</h4>
+          <p>⏰ Deadline June 11 — up to $1,944/yr free</p>
+        </div>
+      </div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Open a no-fee chequing account</h4>
+          <p>Takes 10 minutes online — save $16.95/month</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-label">Days 30</div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Close old student account</h4>
+          <p>Eliminate $203/year in unnecessary fees</p>
+        </div>
+      </div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Apply for a cash-back credit card</h4>
+          <p>Est. $270/year in rewards on current spending</p>
+        </div>
+      </div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Set up $500 emergency fund auto-transfer</h4>
+          <p>Start building your safety net automatically</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-label">Days 60</div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Review first RRSP contribution on pay stub</h4>
+          <p>Confirm employer match is showing up</p>
+        </div>
+      </div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Learn the difference: TFSA vs RRSP</h4>
+          <p>Understand which account to use for what goal</p>
+        </div>
+      </div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Emergency fund check-in</h4>
+          <p>Make sure the auto-transfer is running</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="roadmap-phase">
+      <div class="phase-label">Days 90</div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Prepare for your first tax filing</h4>
+          <p>Gather T4, T4A, and RRSP receipt</p>
+        </div>
+      </div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Review credit card rewards earned</h4>
+          <p>Track whether the card is working for you</p>
+        </div>
+      </div>
+      <div class="roadmap-item" onclick="toggleRoadmapItem(this)">
+        <div class="roadmap-check"></div>
+        <div class="roadmap-text">
+          <h4>Plan TFSA contribution strategy</h4>
+          <p>Decide how much to contribute this year</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-secondary btn-full" onclick="showScreen('dashboard')">← Back to dashboard</button>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════
+     SCREEN 8 · SETTINGS
+════════════════════════════════════════════════════ -->
+<div class="screen" id="screen-settings">
+  <div class="page">
+    <h2 style="margin-bottom:20px">Your settings</h2>
+
+    <div class="settings-section">
+      <h3>What Pathfinder remembers</h3>
+      <div class="card">
+        <div class="settings-row">
+          <div>
+            <div class="label">Life stage</div>
+            <div class="value">Newcomer · New grad · First job</div>
+          </div>
+          <button class="action">Edit</button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="label">Your goals</div>
+            <div class="value">Stop fees, RRSP match, improve credit</div>
+          </div>
+          <button class="action">Edit</button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="label">Language mode</div>
+            <div class="value">Plain language ON</div>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="label">Data source</div>
+            <div class="value">Using Angel's sample data</div>
+          </div>
+          <button class="action">Change</button>
+        </div>
+      </div>
+      <button class="btn btn-secondary btn-full" style="margin-top:10px">Clear all memory</button>
+    </div>
+
+    <div class="settings-section">
+      <h3>Linked accounts</h3>
+      <div class="card">
+        <div class="settings-row">
+          <div>
+            <div class="label">Bank account</div>
+            <div class="value">Not linked</div>
+          </div>
+          <button class="action">Link</button>
+        </div>
+        <div class="settings-row">
+          <div>
+            <div class="label">Payroll / T4</div>
+            <div class="value">Not linked</div>
+          </div>
+          <button class="action">Link</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Notifications</h3>
+      <div class="card">
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <h4>RRSP deadline reminders</h4>
+            <p>Alerts before important deadlines</p>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <h4>Roadmap step reminders</h4>
+            <p>Nudge when a step is coming up</p>
+          </div>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row">
+          <div class="toggle-info">
+            <h4>Weekly financial tip</h4>
+            <p>One short tip relevant to your stage</p>
+          </div>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h3>Data + privacy</h3>
+      <div style="display:flex;gap:10px;margin-bottom:10px">
+        <button class="btn btn-secondary" style="flex:1">Export my data</button>
+        <button class="btn btn-secondary" style="flex:1;color:var(--red);border-color:var(--red)">Delete all data</button>
+      </div>
+      <p style="font-size:12px;text-align:center">
+        Pathfinder never sells your data or shares it without your explicit consent.
+      </p>
+    </div>
+
+    <button class="btn btn-secondary btn-full" onclick="showScreen('dashboard')">← Back to dashboard</button>
+  </div>
+</div>
+
+
+<script>
+  // ── SCREEN MANAGEMENT ──
+  const screens = ['landing','quiz','link','dashboard','report','rrsp','roadmap','settings'];
+  const authedScreens = ['dashboard','report','rrsp','roadmap','settings'];
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    document.querySelectorAll('.screen-nav button').forEach(b => b.classList.remove('current'));
+    const btn = document.getElementById('btn-' + id);
+    if (btn) btn.classList.add('current');
+    document.getElementById('navIcons').style.display =
+      authedScreens.includes(id) ? 'flex' : 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── QUIZ LOGIC ──
+  function goQuizStep(step) {
+    document.getElementById('quiz-step-1').style.display = step === 1 ? 'block' : 'none';
+    document.getElementById('quiz-step-2').style.display = step === 2 ? 'block' : 'none';
+    ['dot-1','dot-2','dot-3'].forEach((id, i) => {
+      const el = document.getElementById(id);
+      el.className = 'step-dot' + (i + 1 < step ? ' done' : '') + (i + 1 === step ? ' active' : '');
+    });
+  }
+
+  function selectChoice(el, group, val) {
+    el.closest('.choice-grid').querySelectorAll('.choice-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function togglePill(el) { el.classList.toggle('selected'); }
+
+  function toggleCheck(el) {
+    el.classList.toggle('selected');
+    const box = el.querySelector('.box');
+    box.textContent = el.classList.contains('selected') ? '✓' : '';
+  }
+
+  // ── RRSP WALKTHROUGH ──
+  let rrspStep = 1;
+  function goRRSPStep(step) {
+    for (let i = 1; i <= 4; i++) {
+      const el = document.getElementById('rrsp-step-' + i);
+      if (el) el.style.display = i === step ? 'block' : 'none';
+    }
+    const dots = document.querySelectorAll('#rrspSteps .ws');
+    dots.forEach((d, i) => {
+      d.className = 'ws' + (i < step - 1 ? ' done' : '') + (i === step - 1 ? ' active' : '');
+    });
+    rrspStep = step;
+  }
+
+  function toggleRRSPRoom() {
+    const box = document.getElementById('rrspRoomExplain');
+    const lbl = document.getElementById('roomToggleLabel');
+    const showing = box.style.display !== 'none';
+    box.style.display = showing ? 'none' : 'block';
+    lbl.textContent = showing ? 'Explain in plain language ↓' : 'Hide ↑';
+  }
+
+  // ── ROADMAP ──
+  const totalItems = 12;
+  let doneCount = 1;
+
+  function toggleRoadmapItem(row) {
+    const check = row.querySelector('.roadmap-check');
+    if (check.classList.contains('done')) {
+      check.classList.remove('done');
+      check.textContent = '';
+      doneCount = Math.max(0, doneCount - 1);
+    } else {
+      check.classList.add('done');
+      check.textContent = '✓';
+      doneCount++;
+    }
+    const pct = Math.round((doneCount / totalItems) * 100);
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressLabel').textContent = doneCount + ' / ' + totalItems + ' steps';
+  }
+
+  // ── PAY TOOLTIPS ──
+  const payInfo = {
+    cpp: 'CPP (Canada Pension Plan) is like a mandatory savings account for retirement. Both you and your employer contribute. You get it back when you retire.',
+    ei: 'EI (Employment Insurance) covers you if you lose your job or take parental leave. Think of it as insurance you hope never to use — but it\'s good to have.',
+    fed: 'Federal income tax goes to the Government of Canada. It funds healthcare, infrastructure, and public services. Your rate depends on how much you earn.',
+    prov: 'Ontario provincial tax is on top of federal tax. Each province has its own rate. Ontario\'s rate is lower than federal but still applies to your full income.'
+  };
+
+  function showTooltip(key) {
+    const box = document.getElementById('payTooltip');
+    if (box.dataset.active === key && box.classList.contains('show')) {
+      box.classList.remove('show');
+      box.dataset.active = '';
+    } else {
+      box.textContent = payInfo[key];
+      box.classList.add('show');
+      box.dataset.active = key;
+    }
+  }
+
+  // ── CHIP REPLIES ──
+  const chipReplies = {
+    'What should I do first?': 'Your most urgent step is RRSP enrolment — deadline in 18 days and you can\'t get it back once missed. After that: open a no-fee account this week to stop the $16.95/month charge.',
+    'Explain my deductions': 'Your $822 in deductions go to CPP (your future pension), EI (job-loss insurance), and income tax (federal + Ontario). All are mandatory — but CPP and EI come back to you eventually.',
+    "What's a TFSA?": 'A TFSA (Tax-Free Savings Account) lets your money grow without paying tax on the gains. Unlike RRSP, you don\'t get a tax deduction when you put money in — but withdrawals are 100% tax-free.',
+    'What could hurt my credit?': 'Missing payments (even by a day), using more than 30% of your credit limit, and applying for too many cards in a short time. Your current card has a low limit — keep usage below $300/month on it.',
+    'Simplest option for me': 'Three steps this week: (1) Enrol in RRSP at 3%. (2) Open a Tangerine no-fee account online — takes 10 min. (3) Set up a $200/month auto-transfer to savings. That\'s it for now.'
+  };
+
+  function showChipReply(chip) {
+    const box = document.getElementById('chipReply');
+    const key = chip.textContent.trim();
+    const reply = chipReplies[key] || 'Let me look that up for you...';
+    if (box.dataset.active === key && box.classList.contains('show')) {
+      box.classList.remove('show');
+      box.dataset.active = '';
+    } else {
+      box.textContent = '💬 ' + reply;
+      box.classList.add('show');
+      box.dataset.active = key;
+    }
+  }
+
+  // ── INIT ──
+  showScreen('landing');
+</script>
+</body>
+</html>
