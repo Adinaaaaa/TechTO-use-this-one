@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pathfinder — Settings</title>
+<style>
+  /* ── TANGERINE DESIGN TOKENS ── */
+  :root {
+    --orange:        #f2691d;
+    --orange-hover:  #e65100;
+    --orange-pale:   #fff5ec;
+    --orange-border: #feac5b;
+    --text:          #3a3835;
+    --text-secondary:#616161;
+    --text-disabled: #bdbdbd;
+    --white:         #ffffff;
+    --bg:            #f7f7f7;
+    --bg-subtle:     #fafafa;
+    --bg-nav-hover:  #ececec;
+    --border:        #e0e0e0;
+    --green:         #2e7d31;
+    --green-bg:      #f3f8f3;
+    --green-bg-alt:  #e8f5e9;
+    --red:           #d50000;
+    --red-bg:        #fcf0f0;
+    --info:          #006fd6;
+    --info-bg:       #e1eff7;
+    --warning:       #8b6400;
+    --warning-bg:    #fff9c4;
+    --font: TangerineCircular, Arial, Helvetica, sans-serif;
+    --r-xs:   0.125rem;
+    --r-sm:   0.25rem;
+    --r-md:   0.5rem;
+    --r-lg:   0.75rem;
+    --r-xl:   1rem;
+    --r-2xl:  1.5rem;
+    --r-full: 9999px;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+    --shadow-md: 0 2px 12px rgba(0,0,0,0.10);
+    --sidebar-w: 220px;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+  }
+
+  /* ════════ SIDEBAR ════════ */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--white);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 50;
+  }
+  .sidebar-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo .logo-icon { font-size: 1.5rem; line-height: 1; }
+  .sidebar-logo .logo-text { font-size: 1.0625rem; font-weight: 700; color: var(--orange); }
+  .sidebar-logo .logo-sub  { font-size: 0.6875rem; color: var(--text-secondary); margin-top: 1px; }
+
+  .sidebar-section { padding: 16px 12px 8px; }
+  .sidebar-section-label {
+    font-size: 0.625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--text-disabled);
+    padding: 0 8px; margin-bottom: 6px;
+  }
+
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--r-lg);
+    font-size: 0.9375rem; font-weight: 500;
+    color: var(--text-secondary);
+    cursor: pointer; border: none;
+    border-left: 3px solid transparent;
+    background: none; font-family: var(--font);
+    width: 100%; text-align: left;
+    transition: all 0.13s; margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--bg-nav-hover); color: var(--text); }
+  .nav-item.active {
+    background: var(--orange-pale); color: var(--orange);
+    border-left-color: var(--orange); font-weight: 600;
+  }
+  .nav-item svg { flex-shrink: 0; }
+
+  .sidebar-bottom {
+    margin-top: auto; padding: 16px 12px;
+    border-top: 1px solid var(--border);
+  }
+  .sidebar-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 10px; border-radius: var(--r-lg); cursor: pointer;
+  }
+  .sidebar-user:hover { background: var(--bg-nav-hover); }
+  .avatar {
+    width: 34px; height: 34px; border-radius: var(--r-full);
+    background: var(--orange-pale); color: var(--orange);
+    font-size: 0.75rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .sidebar-user-info .name  { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+  .sidebar-user-info .plan  { font-size: 0.6875rem; color: var(--text-secondary); margin-top: 1px; }
+
+  /* ════════ MAIN ════════ */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1; display: flex; flex-direction: column; min-height: 100vh;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 40;
+  }
+  .topbar-left h1 { font-size: 1.25rem; font-weight: 700; color: var(--text); }
+  .topbar-left p  { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 1px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .topbar-avatar {
+    width: 36px; height: 36px; border-radius: var(--r-full);
+    background: var(--orange-pale); color: var(--orange);
+    font-size: 0.8125rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+
+  /* ════════ CONTENT ════════ */
+  .content {
+    padding: 36px 40px 64px;
+    flex: 1;
+    max-width: 780px;  /* settings don't need full width */
+  }
+
+  /* Section */
+  .section { margin-bottom: 36px; }
+  .section-header {
+    font-size: 0.6875rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--text-secondary);
+    margin-bottom: 12px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Card */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Settings row */
+  .settings-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .settings-row:last-child { border-bottom: none; }
+  .settings-row-left .row-label { font-size: 0.9375rem; font-weight: 600; color: var(--text); }
+  .settings-row-left .row-value { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 2px; }
+  .btn-action {
+    font-size: 0.875rem; font-weight: 700; color: var(--orange);
+    background: none; border: none; cursor: pointer; font-family: var(--font);
+    padding: 4px 8px; border-radius: var(--r-sm); flex-shrink: 0;
+    transition: background 0.13s;
+  }
+  .btn-action:hover { background: var(--orange-pale); }
+  .btn-action.link { color: var(--orange); }
+
+  /* ════════ FINANCIAL LITERACY SELECTOR ════════ */
+  .literacy-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .literacy-card {
+    display: flex; flex-direction: column; align-items: flex-start;
+    gap: 4px; padding: 14px 16px;
+    background: var(--white);
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-xl);
+    cursor: pointer; text-align: left;
+    font-family: var(--font);
+    transition: border-color 0.15s, background 0.15s;
+    box-shadow: var(--shadow-sm);
+  }
+  .literacy-card:hover { border-color: var(--orange-border); background: var(--orange-pale); }
+  .literacy-card.selected {
+    border-color: var(--orange);
+    background: var(--orange-pale);
+  }
+  .literacy-card .lc-icon { font-size: 1.25rem; margin-bottom: 4px; }
+  .literacy-card .lc-label {
+    font-size: 0.9375rem; font-weight: 700; color: var(--text);
+  }
+  .literacy-card.selected .lc-label { color: var(--orange); }
+  .literacy-card .lc-desc {
+    font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.4;
+  }
+  .literacy-card .lc-check {
+    margin-top: 6px; font-size: 0.75rem; font-weight: 700; color: var(--orange);
+    display: none;
+  }
+  .literacy-card.selected .lc-check { display: block; }
+
+  /* ════════ LINKED ACCOUNTS ════════ */
+  .account-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .account-row:last-child { border-bottom: none; }
+  .account-icon {
+    width: 36px; height: 36px; border-radius: var(--r-md);
+    background: var(--bg); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0;
+  }
+  .account-info { flex: 1; }
+  .account-info .acc-label { font-size: 0.9375rem; font-weight: 600; color: var(--text); }
+  .account-info .acc-value { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 2px; }
+  .account-info .acc-value.connected { color: var(--green); font-weight: 500; }
+
+  .sample-banner {
+    display: flex; align-items: flex-start; gap: 10px;
+    background: var(--info-bg);
+    border: 1px solid #b3d4f0;
+    border-radius: var(--r-lg);
+    padding: 12px 16px;
+    margin-top: 10px;
+    font-size: 0.8125rem; color: var(--info); line-height: 1.5;
+  }
+
+  /* ════════ TOGGLE ════════ */
+  .toggle-switch {
+    width: 44px; height: 24px;
+    background: var(--border);
+    border-radius: var(--r-full);
+    position: relative; cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0; border: none; padding: 0;
+  }
+  .toggle-switch.on { background: var(--orange); }
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 18px; height: 18px;
+    background: var(--white);
+    border-radius: 50%;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .toggle-switch.on::after { transform: translateX(20px); }
+
+  /* ════════ NOTIFICATIONS ════════ */
+  .notif-row {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .notif-row:last-child { border-bottom: none; }
+  .notif-top {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    margin-bottom: 0;
+  }
+  .notif-top.has-sub { margin-bottom: 12px; }
+  .notif-info .notif-label { font-size: 0.9375rem; font-weight: 600; color: var(--text); }
+  .notif-info .notif-desc  { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 2px; }
+
+  /* Frequency chips */
+  .freq-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .freq-chip {
+    font-size: 0.75rem; font-weight: 600;
+    padding: 4px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-full);
+    background: var(--white); color: var(--text-secondary);
+    cursor: pointer; font-family: var(--font);
+    transition: all 0.13s;
+  }
+  .freq-chip:hover { border-color: var(--orange-border); color: var(--text); }
+  .freq-chip.active { border-color: var(--orange); background: var(--orange-pale); color: var(--orange); }
+
+  /* Delivery methods */
+  .delivery-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .delivery-row:last-child { border-bottom: none; }
+  .delivery-label { font-size: 0.875rem; font-weight: 600; color: var(--text); flex: 1; }
+  .delivery-desc  { font-size: 0.8125rem; color: var(--text-secondary); flex: 2; }
+  .delivery-methods { display: flex; gap: 6px; margin-left: auto; flex-shrink: 0; }
+  .method-chip {
+    font-size: 0.75rem; font-weight: 600;
+    padding: 4px 10px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-full);
+    background: var(--white); color: var(--text-secondary);
+    cursor: pointer; font-family: var(--font);
+    transition: all 0.13s;
+  }
+  .method-chip:hover { border-color: var(--orange-border); }
+  .method-chip.active { border-color: var(--orange); background: var(--orange-pale); color: var(--orange); }
+
+  /* Quiet hours */
+  .quiet-hours-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; gap: 16px;
+  }
+  .quiet-time-inputs {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 0.875rem; color: var(--text-secondary);
+  }
+  .time-input {
+    border: 1.5px solid var(--border); border-radius: var(--r-md);
+    padding: 5px 10px; font-size: 0.875rem; color: var(--text);
+    font-family: var(--font); background: var(--white); cursor: pointer;
+  }
+  .time-input:focus { outline: 2px solid var(--orange); border-color: var(--orange); }
+
+  /* ════════ BUTTONS ════════ */
+  .btn-secondary {
+    font-size: 0.9375rem; font-weight: 600;
+    padding: 10px 20px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--r-2xl);
+    background: var(--white); color: var(--text);
+    cursor: pointer; font-family: var(--font);
+    transition: all 0.13s;
+  }
+  .btn-secondary:hover { background: var(--bg); border-color: var(--text-secondary); }
+  .btn-secondary.danger { color: var(--red); border-color: var(--red); }
+  .btn-secondary.danger:hover { background: var(--red-bg); }
+  .btn-secondary.full { width: 100%; }
+
+  .danger-row {
+    display: flex; gap: 12px; margin-bottom: 12px;
+  }
+  .danger-row .btn-secondary { flex: 1; }
+
+  .privacy-note {
+    font-size: 0.8125rem; color: var(--text-secondary);
+    text-align: center; line-height: 1.5;
+  }
+
+  /* Section gap below card */
+  .section-actions { margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<!-- ════════ SIDEBAR ════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-icon">🍊</span>
+    <div>
+      <div class="logo-text">Pathfinder</div>
+      <div class="logo-sub">by Tangerine</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Menu</div>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      Home
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Paycheque
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l4-8 4 4 4-6 4 5"/></svg>
+      Roadmap
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      Goals
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Reminders
+    </button>
+  </div>
+
+  <div class="sidebar-section" style="margin-top:8px">
+    <div class="sidebar-section-label">Learn</div>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      Glossary
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Help
+    </button>
+    <button class="nav-item active">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
+    </button>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user">
+      <div class="avatar">AC</div>
+      <div class="sidebar-user-info">
+        <div class="name">Angel Chen</div>
+        <div class="plan">Newcomer plan · Week 1</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════ MAIN ════════ -->
+<div class="main">
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>Settings</h1>
+      <p>Manage your profile, accounts, and preferences</p>
+    </div>
+    <div class="topbar-right">
+      <div class="topbar-avatar">AC</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ── 1. PROFILE ── -->
+    <div class="section">
+      <div class="section-header">What Pathfinder remembers</div>
+      <div class="card">
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="row-label">Life stage</div>
+            <div class="row-value">Newcomer · New grad · First job</div>
+          </div>
+          <button class="btn-action">Edit</button>
+        </div>
+        <div class="settings-row">
+          <div class="settings-row-left">
+            <div class="row-label">Your goals</div>
+            <div class="row-value">Stop fees, RRSP match, improve credit</div>
+          </div>
+          <button class="btn-action">Edit</button>
+        </div>
+      </div>
+      <div class="section-actions">
+        <button class="btn-secondary full">Clear all memory</button>
+      </div>
+    </div>
+
+    <!-- ── 2. FINANCIAL LITERACY LEVEL ── -->
+    <!-- Replaces "Language mode ON/OFF" toggle — now a 4-level selector -->
+    <div class="section">
+      <div class="section-header">Financial literacy level</div>
+      <div class="literacy-grid">
+        <button class="literacy-card selected" onclick="selectLiteracy(this)">
+          <div class="lc-icon">🌱</div>
+          <div class="lc-label">Just starting out</div>
+          <div class="lc-desc">Terms like RRSP, TFSA, and CPP are new to me</div>
+          <div class="lc-check">✓ Your current level</div>
+        </button>
+        <button class="literacy-card" onclick="selectLiteracy(this)">
+          <div class="lc-icon">📄</div>
+          <div class="lc-label">Some basics</div>
+          <div class="lc-desc">I understand paycheques but not much beyond that</div>
+          <div class="lc-check">✓ Your current level</div>
+        </button>
+        <button class="literacy-card" onclick="selectLiteracy(this)">
+          <div class="lc-icon">📈</div>
+          <div class="lc-label">Getting confident</div>
+          <div class="lc-desc">I know the basics and want to grow my knowledge</div>
+          <div class="lc-check">✓ Your current level</div>
+        </button>
+        <button class="literacy-card" onclick="selectLiteracy(this)">
+          <div class="lc-icon">💼</div>
+          <div class="lc-label">Comfortable</div>
+          <div class="lc-desc">I invest and manage my finances actively</div>
+          <div class="lc-check">✓ Your current level</div>
+        </button>
+      </div>
+    </div>
+
+    <!-- ── 3. LINKED ACCOUNTS (data source merged in) ── -->
+    <div class="section">
+      <div class="section-header">Linked accounts &amp; data source</div>
+      <div class="card">
+        <div class="account-row">
+          <div class="account-icon">🏦</div>
+          <div class="account-info">
+            <div class="acc-label">Bank account</div>
+            <div class="acc-value">Not linked — connect to use live data</div>
+          </div>
+          <button class="btn-action link">Link</button>
+        </div>
+        <div class="account-row">
+          <div class="account-icon">📋</div>
+          <div class="account-info">
+            <div class="acc-label">Payroll / T4</div>
+            <div class="acc-value">Not linked — connect to see deduction breakdown</div>
+          </div>
+          <button class="btn-action link">Link</button>
+        </div>
+        <div class="account-row">
+          <div class="account-icon">💳</div>
+          <div class="account-info">
+            <div class="acc-label">Credit card</div>
+            <div class="acc-value">Not linked — connect to track spending &amp; fees</div>
+          </div>
+          <button class="btn-action link">Link</button>
+        </div>
+      </div>
+      <div class="sample-banner">
+        <span>ℹ️</span>
+        <span>No accounts linked yet — Pathfinder is using Angel's sample data. Link a bank account or payroll to see your real numbers.</span>
+      </div>
+    </div>
+
+    <!-- ── 4. NOTIFICATIONS ── -->
+    <div class="section">
+      <div class="section-header">Notifications</div>
+
+      <!-- Delivery method -->
+      <div class="card" style="margin-bottom:12px">
+        <div style="padding:14px 20px 8px; border-bottom:1px solid var(--border)">
+          <div style="font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-secondary);margin-bottom:10px">Alert delivery</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;padding-bottom:6px">
+            <button class="method-chip active" onclick="toggleChip(this)">In-app</button>
+            <button class="method-chip active" onclick="toggleChip(this)">Email</button>
+            <button class="method-chip" onclick="toggleChip(this)">Push notification</button>
+            <button class="method-chip" onclick="toggleChip(this)">SMS</button>
+          </div>
+        </div>
+        <!-- Quiet hours -->
+        <div class="quiet-hours-row">
+          <div class="settings-row-left">
+            <div class="row-label">Quiet hours</div>
+            <div class="row-value">No alerts during this window</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="quiet-time-inputs" id="quiet-inputs" style="display:none">
+              <input type="time" class="time-input" value="22:00" />
+              <span>to</span>
+              <input type="time" class="time-input" value="08:00" />
+            </div>
+            <button class="toggle-switch" id="quiet-toggle" onclick="toggleQuiet()" title="Toggle quiet hours"></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Per-notification settings -->
+      <div class="card">
+
+        <!-- RRSP deadline reminders -->
+        <div class="notif-row">
+          <div class="notif-top has-sub">
+            <div class="notif-info">
+              <div class="notif-label">RRSP deadline reminders</div>
+              <div class="notif-desc">Alerts before important deadlines</div>
+            </div>
+            <button class="toggle-switch on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="freq-chips">
+            <span style="font-size:0.75rem;color:var(--text-secondary);align-self:center;margin-right:2px">Remind me:</span>
+            <button class="freq-chip active" onclick="selectFreq(this)">30 days before</button>
+            <button class="freq-chip" onclick="selectFreq(this)">2 weeks before</button>
+            <button class="freq-chip" onclick="selectFreq(this)">1 week before</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Day before</button>
+          </div>
+        </div>
+
+        <!-- Roadmap step reminders -->
+        <div class="notif-row">
+          <div class="notif-top has-sub">
+            <div class="notif-info">
+              <div class="notif-label">Roadmap step reminders</div>
+              <div class="notif-desc">Nudge when a step is coming up</div>
+            </div>
+            <button class="toggle-switch on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="freq-chips">
+            <span style="font-size:0.75rem;color:var(--text-secondary);align-self:center;margin-right:2px">Frequency:</span>
+            <button class="freq-chip" onclick="selectFreq(this)">Daily</button>
+            <button class="freq-chip active" onclick="selectFreq(this)">Weekly</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Only when due</button>
+          </div>
+        </div>
+
+        <!-- Weekly financial tip -->
+        <div class="notif-row">
+          <div class="notif-top has-sub">
+            <div class="notif-info">
+              <div class="notif-label">Financial tip</div>
+              <div class="notif-desc">One short tip relevant to your stage</div>
+            </div>
+            <button class="toggle-switch" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="freq-chips">
+            <span style="font-size:0.75rem;color:var(--text-secondary);align-self:center;margin-right:2px">Frequency:</span>
+            <button class="freq-chip" onclick="selectFreq(this)">Daily</button>
+            <button class="freq-chip active" onclick="selectFreq(this)">Weekly</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Monthly</button>
+          </div>
+        </div>
+
+        <!-- Tax filing season -->
+        <div class="notif-row">
+          <div class="notif-top has-sub">
+            <div class="notif-info">
+              <div class="notif-label">Tax filing season alerts</div>
+              <div class="notif-desc">Reminders and guides during tax season (Feb–Apr)</div>
+            </div>
+            <button class="toggle-switch on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="freq-chips">
+            <span style="font-size:0.75rem;color:var(--text-secondary);align-self:center;margin-right:2px">Alert style:</span>
+            <button class="freq-chip active" onclick="selectFreq(this)">In-app banner</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Email digest</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Both</button>
+          </div>
+        </div>
+
+        <!-- Monthly savings summary -->
+        <div class="notif-row">
+          <div class="notif-top has-sub">
+            <div class="notif-info">
+              <div class="notif-label">Monthly savings summary</div>
+              <div class="notif-desc">How much you saved vs. your target each month</div>
+            </div>
+            <button class="toggle-switch on" onclick="this.classList.toggle('on')"></button>
+          </div>
+          <div class="freq-chips">
+            <span style="font-size:0.75rem;color:var(--text-secondary);align-self:center;margin-right:2px">Send on:</span>
+            <button class="freq-chip active" onclick="selectFreq(this)">1st of month</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Last day of month</button>
+            <button class="freq-chip" onclick="selectFreq(this)">Payday</button>
+          </div>
+        </div>
+
+        <!-- Paycheque received -->
+        <div class="notif-row">
+          <div class="notif-top">
+            <div class="notif-info">
+              <div class="notif-label">Paycheque received</div>
+              <div class="notif-desc">Notify when a new paycheque is detected</div>
+            </div>
+            <button class="toggle-switch on" onclick="this.classList.toggle('on')"></button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── 5. DATA + PRIVACY ── -->
+    <div class="section">
+      <div class="section-header">Data + privacy</div>
+      <div class="danger-row">
+        <button class="btn-secondary">Export my data</button>
+        <button class="btn-secondary danger">Delete all data</button>
+      </div>
+      <p class="privacy-note">Pathfinder never sells your data or shares it without your explicit consent.</p>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+  function selectLiteracy(el) {
+    document.querySelectorAll('.literacy-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function toggleChip(el) {
+    el.classList.toggle('active');
+  }
+
+  function selectFreq(el) {
+    const siblings = el.parentElement.querySelectorAll('.freq-chip');
+    siblings.forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+  }
+
+  function toggleQuiet() {
+    const btn = document.getElementById('quiet-toggle');
+    const inputs = document.getElementById('quiet-inputs');
+    btn.classList.toggle('on');
+    inputs.style.display = btn.classList.contains('on') ? 'flex' : 'none';
+  }
+</script>
+</body>
+</html>
