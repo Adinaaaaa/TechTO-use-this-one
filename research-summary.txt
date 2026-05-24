@@ -7,18 +7,28 @@ https://www.figma.com/board/Azt0J2gZpTTPoA7gg8Yjek/TechTO?node-id=0-1&t=hrSVHKbv
 Competition reference:
 https://www.notion.so/TechTO-Hackathon-May-24-2026-366e0e6c336a806fb311d9f0961164c4
 
+Planning sources:
+- /Users/adina/Desktop/TechTO.pdf
+- https://claude.ai/share/a792e921-8cc4-4308-ab61-ff2ef8f0bd86
+
 Status:
-Draft summary created from the visible FigJam board screenshot. The raw FigJam text
-still could not be accessed through the Figma integration, so this should be treated
-as a working summary rather than a complete transcript.
+Updated summary based on the FigJam board, exported planning PDF, hackathon brief,
+and shared Claude planning conversation. The raw FigJam text still could not be
+accessed through the Figma integration, but the PDF now captures the board content
+in enough detail to guide the build.
 
 Research summary:
 - The research is exploring how Tangerine could better support financially
-  stressful life moments, especially for newcomers, digital-first users, new
-  grads, and first-time home buyers.
-- The target users appear to need help understanding Canadian financial systems,
-  building credit, managing bills, budgeting day to day, and making large
-  decisions such as renting, buying a home, or choosing financial products.
+  stressful life moments, with the sharpest MVP focus on newcomer new grads who
+  are starting work in Canada and do not yet understand the Canadian financial
+  system.
+- The core persona is Angel Chen, 22. She is a new grad and newcomer to Canada
+  who just started a new job. Her only bank account is a campus account, she now
+  sees fees she does not understand, has one no-rewards credit card, and feels
+  embarrassed and distrustful when trying to get help from banks.
+- The target users need confidence and clarity more than more financial
+  complexity. They need to understand Canadian banking, credit, payroll
+  deductions, registered accounts, taxes, fees, and what to do first.
 - Existing pain points include financial anxiety, confusing jargon, uncertainty
   about what to do next, difficulty comparing options, limited trust in generic
   financial advice, and a lack of culturally relevant or life-stage-specific
@@ -26,18 +36,40 @@ Research summary:
 - Competitor notes compare tools such as Borrowell, Pill, and Marcus AI. The
   board highlights gaps around personalization, multilingual support, cultural
   finance context, coaching, and actionable step-by-step planning.
-- Differentiation opportunities for Tangerine include life-stage
-  personalization, multilingual and cultural finance support, conversational
-  financial coaching, milestone-driven roadmaps, jargon-free financial literacy,
-  and a clearer first-home-buyer journey.
-- Early product ideas include a Tangerine budgeting or banking suite with tools
-  such as a Cash Back Calculator, Budget Tool, and Money Rules Tool.
+- Differentiation opportunities for Tangerine include identity-aware guidance,
+  multilingual and cultural finance support, conversational coaching with memory,
+  milestone-driven roadmaps, jargon-free financial literacy, trust controls, and
+  action-oriented next steps rather than static reports.
+- The strongest product wedge is a friendly AI money coach that answers: "What
+  should I do next with my money?" For Angel, the first valuable moments are
+  explaining her paycheque, identifying mystery bank fees, recommending a better
+  account or credit card path, and guiding her through RRSP matching.
+- Early product ideas include a personalization quiz, optional bank and payroll
+  linking, a personalized dashboard, an initial report based on linked data, a
+  roadmap visualization, financial education prompts, generated Q&A, reminders,
+  safety settings, memory review, and personalized reports with references.
 - Tangerine's relevant strengths for newcomers include digital-first banking,
   no-fee or low-friction account access, a broad ATM network, cashback-oriented
   products, and newcomer-focused mortgage support.
 - Open questions include which target user segment should be prioritized first,
   what financial moment matters most, how much guidance should be automated, and
   how Tangerine can build trust without feeling generic or overwhelming.
+
+Chosen MVP direction:
+- Focus on Angel's first-year-in-Canada / first-job financial roadmap.
+- Start with a short personalization quiz before optional data linking.
+- Generate a personalized dashboard and tutorial so Angel does not need to know
+  what to ask.
+- Generate an initial report that explains payroll, spending, bank fees, and
+  urgent financial actions in plain language.
+- Include trust controls: review long-term memory, manage linked accounts,
+  toggle data sharing, and explain recommendations with sources.
+- Use the AI as a guided agent, not just a chat box. The interface should rely on
+  dashboard sections, decision cards, reports, buttons, and walkthroughs, with
+  chat available as support.
+- For RRSP matching, the AI cannot fully automate legal employee enrolment, but
+  it can detect deadlines, calculate the contribution needed for the full match,
+  recommend a fund, explain contribution room, and guide the form field by field.
 
 Hackathon guidance:
 - Build for Track 2: Tangerine - AI Agents to Organize Your Financial Life.
@@ -54,6 +86,4 @@ Hackathon guidance:
   and Q&A.
 
 Access note:
-To create a more complete summary, use direct FigJam text access or export the
-board contents. The browser screenshot was enough for a draft, but some smaller
-notes were not fully readable.
+The PDF export is currently the most complete readable copy of the planning board.

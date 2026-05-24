@@ -1,0 +1,160 @@
+TechTO Tangerine Making Plan
+============================
+
+Working product concept:
+Tangerine Pathfinder, a friendly AI money coach for newcomer new grads starting
+their first job in Canada. The product helps them understand what is happening
+with their money, what to do next, and which actions matter most.
+
+Demo promise:
+"Angel just started her first Canadian job. Tangerine Pathfinder turns her
+confusing payroll, bank fees, credit card options, and RRSP matching deadline
+into a clear first-year financial roadmap."
+
+MVP user:
+- Angel Chen, 22
+- Newcomer to Canada and recent Canadian university graduate
+- Starting a new job
+- Has a campus bank account that now charges fees
+- Has one no-rewards credit card
+- Feels embarrassed asking basic financial questions
+- Distrusts bank tellers because she worries they are upselling her
+
+Core user flow:
+1. Landing / product intro
+   - Explain that this is a guided AI money coach, not a generic chatbot.
+   - Primary action: "Build my first financial roadmap."
+
+2. Personalization quiz
+   - Ask financial knowledge level.
+   - Ask status: newcomer, new grad, first job, first home buyer, or other.
+   - Ask top goals: emergency fund, reduce fees, improve credit, invest, save
+     for a home, send money home, pay debt, file taxes.
+   - Ask language preference and whether the user wants plain-language mode.
+
+3. Optional linking step
+   - Offer to link bank and payroll information.
+   - Make this optional for trust.
+   - Explain exactly what linking helps with and what the user can turn off.
+
+4. Trust and data controls
+   - Show settings for linked accounts, long-term memory, reminders, and data
+     sharing.
+   - Let Angel review and edit what the AI remembers.
+   - Let Angel continue with sample data if she does not want to link accounts.
+
+5. Personalized dashboard
+   - Generate dashboard sections based on the quiz.
+   - Show only what Angel needs now to reduce overwhelm.
+   - Suggested sections:
+     - Paycheque explained
+     - Bank fees and account fit
+     - Credit card upgrade path
+     - RRSP matching task
+     - First-year financial roadmap
+     - Ask in plain language
+
+6. Initial AI report
+   - Explain after-tax pay and deductions.
+   - Flag mystery bank fees and suggest a no-fee account path.
+   - Explain why her current credit card may not fit her needs.
+   - Identify urgent actions, especially RRSP matching.
+   - Cite references or source labels for recommendations.
+
+7. RRSP matching walkthrough
+   - Detect or ask for the employer deadline.
+   - Calculate the contribution percentage and dollar amount needed to capture
+     the full employer match.
+   - Explain RRSP contribution room in plain language.
+   - Recommend a reasonable fund path or explain the tradeoffs.
+   - Walk through the enrolment form field by field.
+   - Be clear that Angel must submit the legal enrolment herself.
+
+8. Roadmap visualization
+   - Show 30, 60, and 90 day actions.
+   - Show month 3 to 6 progress goals.
+   - Include milestones such as:
+     - Stop unnecessary bank fees
+     - Capture employer RRSP match
+     - Choose a better credit card path
+     - Build emergency fund
+     - Understand TFSA vs RRSP
+     - Prepare for first tax filing
+
+9. Guided AI support
+   - Avoid making the main interface a blank chat box.
+   - Use cards, buttons, and prompts such as:
+     - "Explain this like I am new to Canada"
+     - "What should I do first?"
+     - "Show me the safest option"
+     - "What could hurt my credit?"
+     - "Translate this into simpler language"
+
+Prototype screens to build:
+- Landing screen
+- Personalization quiz
+- Optional linking and trust controls
+- Dashboard
+- Initial report
+- RRSP matching walkthrough
+- Roadmap visualization
+- Settings / memory review
+
+AI behavior to demonstrate:
+- Classifies Angel's life stage from quiz answers.
+- Uses plain language and reassurance.
+- Produces a structured dashboard, not only chat text.
+- Gives source-backed recommendations.
+- Remembers goals and previous choices.
+- Shows proactive nudges such as RRSP deadline reminders.
+- Explains what it cannot do automatically and where user consent is required.
+
+Design priorities:
+- Warm, non-judgmental tone.
+- Low cognitive load.
+- Tangerine brand fit: simple, friendly, clear, optimistic.
+- Multilingual and multicultural affordances.
+- Trust at every step, especially around linked accounts and AI memory.
+- Celebrate concrete wins instead of abstract financial literacy.
+
+Build priorities:
+1. Static prototype with believable sample data for Angel.
+2. Quiz state that changes dashboard content.
+3. Generated-looking initial report and roadmap.
+4. RRSP matching guided task.
+5. Trust controls screen.
+6. Optional AI/chat panel if time allows.
+
+Suggested implementation approach:
+- Use a simple web app with hard-coded Angel sample data.
+- Keep data local for the prototype.
+- Use reusable components for cards, steps, recommendations, and roadmap items.
+- If using an LLM during the demo, keep it scoped to explanation and Q&A.
+- If LLM integration is too risky for the deadline, simulate AI output with
+  deterministic content and focus the demo on the product experience.
+
+Hackathon timeline:
+- 1:00-1:30 PM: Lunch and finalize scope.
+- 1:30-2:30 PM: Design system, low-fidelity screens, and screen content.
+- 2:30-3:00 PM: Interaction design and prototype states.
+- 3:00-4:00 PM: Build/vibe code the prototype and test the demo flow.
+- 4:00-4:30 PM: Script the video around pain point, target user, key features,
+  AI agent value, and impact.
+- 4:30 PM: Finish animation/editing.
+- 5:00 PM: Submit video.
+
+Demo story:
+1. Angel opens Tangerine Pathfinder after seeing her first confusing paycheque.
+2. She completes a short quiz and chooses plain-language support.
+3. She optionally links payroll and banking data, with clear trust controls.
+4. The dashboard is generated around her actual needs.
+5. The initial report explains her paycheque, bank fees, and first actions.
+6. The AI flags RRSP matching as urgent and walks her through the process.
+7. Angel sees a 30/60/90 day roadmap and feels clear about what to do next.
+
+What to avoid:
+- A generic finance chatbot with no structured outcomes.
+- Too many target segments in the demo.
+- Overpromising full automation for legal or banking actions.
+- Product recommendations that feel like upselling.
+- Dense financial education pages without a next step.
