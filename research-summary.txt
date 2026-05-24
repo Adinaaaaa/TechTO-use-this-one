@@ -1,0 +1,42 @@
+TechTO Tangerine Research Summary
+=================================
+
+Source board:
+https://www.figma.com/board/Azt0J2gZpTTPoA7gg8Yjek/TechTO?node-id=0-1&t=hrSVHKbvCYfbJRKD-1
+
+Status:
+Draft summary created from the visible FigJam board screenshot. The raw FigJam text
+still could not be accessed through the Figma integration, so this should be treated
+as a working summary rather than a complete transcript.
+
+Research summary:
+- The research is exploring how Tangerine could better support financially
+  stressful life moments, especially for newcomers, digital-first users, new
+  grads, and first-time home buyers.
+- The target users appear to need help understanding Canadian financial systems,
+  building credit, managing bills, budgeting day to day, and making large
+  decisions such as renting, buying a home, or choosing financial products.
+- Existing pain points include financial anxiety, confusing jargon, uncertainty
+  about what to do next, difficulty comparing options, limited trust in generic
+  financial advice, and a lack of culturally relevant or life-stage-specific
+  guidance.
+- Competitor notes compare tools such as Borrowell, Pill, and Marcus AI. The
+  board highlights gaps around personalization, multilingual support, cultural
+  finance context, coaching, and actionable step-by-step planning.
+- Differentiation opportunities for Tangerine include life-stage
+  personalization, multilingual and cultural finance support, conversational
+  financial coaching, milestone-driven roadmaps, jargon-free financial literacy,
+  and a clearer first-home-buyer journey.
+- Early product ideas include a Tangerine budgeting or banking suite with tools
+  such as a Cash Back Calculator, Budget Tool, and Money Rules Tool.
+- Tangerine's relevant strengths for newcomers include digital-first banking,
+  no-fee or low-friction account access, a broad ATM network, cashback-oriented
+  products, and newcomer-focused mortgage support.
+- Open questions include which target user segment should be prioritized first,
+  what financial moment matters most, how much guidance should be automated, and
+  how Tangerine can build trust without feeling generic or overwhelming.
+
+Access note:
+To create a more complete summary, use direct FigJam text access or export the
+board contents. The browser screenshot was enough for a draft, but some smaller
+notes were not fully readable.
