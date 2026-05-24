@@ -5,29 +5,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Pathfinder — Paycheque</title>
 <style>
-  /* ── TANGERINE DESIGN TOKENS (matched to tokens.json) ── */
+  /* ── TANGERINE DESIGN TOKENS (tokens.json) ── */
   :root {
-    /* brand */
     --orange:        #f2691d;   /* brand.orange */
     --orange-hover:  #e65100;   /* brand.orange-hover */
     --orange-pale:   #fff5ec;   /* brand.orange-pale */
     --orange-border: #feac5b;   /* brand.orange-light */
-
-    /* text */
     --text:          #3a3835;   /* text.primary */
     --text-secondary:#616161;   /* text.secondary */
     --text-disabled: #bdbdbd;   /* text.disabled */
-    --white:         #ffffff;   /* text.white / background.white */
-
-    /* backgrounds */
+    --white:         #ffffff;
     --bg:            #f7f7f7;   /* background.light */
     --bg-subtle:     #fafafa;   /* background.subtle */
     --bg-nav-hover:  #ececec;   /* background.nav-hover */
-
-    /* neutral */
     --border:        #e0e0e0;   /* neutral.border */
-
-    /* semantic */
     --green:         #2e7d31;   /* semantic.success */
     --green-bg:      #f3f8f3;   /* semantic.success-bg */
     --green-bg-alt:  #e8f5e9;   /* semantic.success-bg-alt */
@@ -35,21 +26,19 @@
     --red-bg:        #fcf0f0;   /* semantic.error-bg */
     --info:          #006fd6;   /* semantic.info */
     --info-bg:       #e1eff7;   /* semantic.info-bg */
-
+    --warning:       #8b6400;   /* semantic.warning */
+    --warning-bg:    #fff9c4;   /* semantic.warning-bg */
     --font: TangerineCircular, Arial, Helvetica, sans-serif;
-
-    /* Radius — from tangerine.ca CSS / tokens.json */
-    --r-xs:   0.125rem;  /* borderRadius.xs — 2px */
-    --r-sm:   0.25rem;   /* borderRadius.sm — 4px */
-    --r-md:   0.5rem;    /* borderRadius.md — 8px */
-    --r-lg:   0.75rem;   /* borderRadius.lg — 12px */
-    --r-xl:   1rem;      /* borderRadius.xl — 16px, cards */
-    --r-2xl:  1.5rem;    /* borderRadius.2xl — 24px, buttons */
-    --r-full: 9999px;    /* borderRadius.full — pills, badges */
-
-    /* Shadows — from tokens.json */
-    --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);   /* boxShadow.sm */
-    --shadow-md: 0 2px 12px rgba(0,0,0,0.10);  /* boxShadow.md */
+    --r-xs:   0.125rem;
+    --r-sm:   0.25rem;
+    --r-md:   0.5rem;
+    --r-lg:   0.75rem;
+    --r-xl:   1rem;
+    --r-2xl:  1.5rem;
+    --r-full: 9999px;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+    --shadow-md: 0 2px 12px rgba(0,0,0,0.10);
+    --sidebar-w: 220px;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -60,142 +49,276 @@
     color: var(--text);
     min-height: 100vh;
     display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 32px 16px 64px;
   }
 
-  /* ── PHONE FRAME ── */
-  .frame {
-    width: 100%;
-    max-width: 480px;
-  }
-
-  /* ── HEADER ── */
-  .header {
+  /* ════════════════════════════════
+     SIDEBAR
+  ════════════════════════════════ */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--text);          /* neutral.dark #3a3835 */
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 22px;
+    flex-direction: column;
+    flex-shrink: 0;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: 50;
   }
-  .header-left h1 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.25;
-    margin-bottom: 3px;
-  }
-  .header-left p {
-    font-size: 0.8125rem;
-    color: var(--text-secondary);
-  }
-  .header-right {
+
+  .sidebar-logo {
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
-  .header-date {
-    font-size: 0.8125rem;
-    color: var(--text-secondary);
+  .sidebar-logo .logo-icon {
+    font-size: 1.5rem;
+    line-height: 1;
   }
+  .sidebar-logo .logo-text {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+  .sidebar-logo .logo-sub {
+    font-size: 0.6875rem;
+    color: var(--text-disabled);
+    margin-top: 1px;
+  }
+
+  .sidebar-section {
+    padding: 16px 12px 8px;
+  }
+  .sidebar-section-label {
+    font-size: 0.625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-disabled);
+    padding: 0 8px;
+    margin-bottom: 6px;
+  }
+
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 10px;
+    border-radius: var(--r-lg);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: rgba(255,255,255,0.65);
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: var(--font);
+    width: 100%;
+    text-align: left;
+    transition: all 0.13s;
+    margin-bottom: 2px;
+  }
+  .nav-item:hover {
+    background: rgba(255,255,255,0.07);
+    color: var(--white);
+  }
+  .nav-item.active {
+    background: var(--orange);        /* brand.orange */
+    color: var(--white);
+    font-weight: 600;
+  }
+  .nav-item.active:hover {
+    background: var(--orange-hover);
+  }
+  .nav-item svg { flex-shrink: 0; opacity: 0.8; }
+  .nav-item.active svg { opacity: 1; }
+
+  .sidebar-bottom {
+    margin-top: auto;
+    padding: 16px 12px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .sidebar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    border-radius: var(--r-lg);
+    cursor: pointer;
+  }
+  .sidebar-user:hover { background: rgba(255,255,255,0.07); }
   .avatar {
-    width: 38px;
-    height: 38px;
+    width: 34px; height: 34px;
     border-radius: var(--r-full);
-    background: var(--orange-pale);   /* brand.orange-pale */
-    color: var(--orange);             /* brand.orange */
-    font-size: 0.8125rem;
+    background: var(--orange-pale);
+    color: var(--orange);
+    font-size: 0.75rem;
     font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
   }
-
-  /* ── NAV TABS ── */
-  .nav-tabs {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-    margin-bottom: 20px;
+  .sidebar-user-info .name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--white);
   }
-  .nav-tab {
+  .sidebar-user-info .plan {
+    font-size: 0.6875rem;
+    color: var(--text-disabled);
+    margin-top: 1px;
+  }
+
+  /* ════════════════════════════════
+     MAIN AREA
+  ════════════════════════════════ */
+  .main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* TOP BAR */
+  .topbar {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 40;
+  }
+  .topbar-left h1 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1.2;
+  }
+  .topbar-left p {
+    font-size: 0.8125rem;
+    color: var(--text-secondary);
+    margin-top: 1px;
+  }
+  .topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .topbar-date {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    background: var(--bg);
+    padding: 5px 12px;
+    border-radius: var(--r-full);
+    border: 1px solid var(--border);
+  }
+  .topbar-avatar {
+    width: 36px; height: 36px;
+    border-radius: var(--r-full);
+    background: var(--orange-pale);
+    color: var(--orange);
+    font-size: 0.8125rem;
+    font-weight: 700;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    padding: 11px 6px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--r-xl);
-    background: var(--white);
-    font-family: var(--font);
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text);
     cursor: pointer;
-    transition: all 0.15s;
-    white-space: nowrap;
-  }
-  .nav-tab svg { flex-shrink: 0; }
-  .nav-tab:hover { border-color: var(--orange); color: var(--orange); }
-  .nav-tab.active {
-    background: var(--orange);        /* brand.orange — primary button color */
-    border-color: var(--orange);
-    color: var(--white);
-  }
-  .nav-tab.active:hover {
-    background: var(--orange-hover);  /* brand.orange-hover */
-    border-color: var(--orange-hover);
   }
 
-  /* ── STAT ROW ── */
-  .stat-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    background: var(--bg-nav-hover);  /* background.nav-hover — #ececec */
-    border-radius: var(--r-xl);       /* borderRadius.xl */
-    overflow: hidden;
-    margin-bottom: 16px;
+  /* URGENT BANNER */
+  .urgent-banner {
+    background: var(--red-bg);
+    border-bottom: 1px solid #f5b7b1;
+    padding: 10px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
   }
-  .stat-cell {
-    padding: 18px 20px 20px;
+  .urgent-banner-text {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.875rem;
+    color: var(--red);
+    font-weight: 500;
   }
-  .stat-cell + .stat-cell {
-    border-left: 1px solid var(--border);  /* neutral.border — #e0e0e0 */
-  }
-  .stat-label {
+  .urgent-banner-action {
     font-size: 0.8125rem;
-    color: var(--text-secondary);
-    margin-bottom: 6px;
-  }
-  .stat-value {
-    font-size: 2rem;
     font-weight: 700;
-    color: var(--text);
-    line-height: 1;
-    margin-bottom: 4px;
+    color: var(--red);
+    background: none;
+    border: 1.5px solid var(--red);
+    border-radius: var(--r-2xl);
+    padding: 5px 14px;
+    cursor: pointer;
+    font-family: var(--font);
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: all 0.13s;
   }
-  .stat-value.green { color: var(--green); }
-  .stat-sub {
-    font-size: 0.8125rem;
-    color: var(--text-secondary);
+  .urgent-banner-action:hover { background: var(--red); color: var(--white); }
+
+  /* CONTENT */
+  .content {
+    padding: 28px 32px 48px;
+    flex: 1;
+  }
+
+  /* STATS ROW — 4 cards */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--r-xl);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .stat-card.highlight { border-color: var(--orange-border); background: var(--orange-pale); }
+  .stat-card.danger    { border-color: #f5b7b1;              background: var(--red-bg); }
+  .stat-card.success   { border-color: #a5d6a7;              background: var(--green-bg); }
+  .stat-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--text); line-height: 1; margin-bottom: 4px; }
+  .stat-value.green   { color: var(--green); }
+  .stat-value.orange  { color: var(--orange); }
+  .stat-value.red     { color: var(--red); }
+  .stat-sub   { font-size: 0.75rem; color: var(--text-secondary); }
+
+  /* CONTENT GRID — main + sidebar */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 20px;
+    align-items: start;
   }
 
   /* ── PAYCHEQUE CARD ── */
   .pay-card {
     background: var(--white);
-    border-radius: var(--r-xl);          /* borderRadius.xl */
+    border-radius: var(--r-xl);
+    border: 1px solid var(--border);
     overflow: hidden;
-    box-shadow: var(--shadow-sm);        /* boxShadow.sm */
+    box-shadow: var(--shadow-sm);
   }
-
-  /* Card header row */
   .pay-card-header {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 13px 18px;
+    gap: 10px;
+    padding: 14px 20px;
     border-bottom: 1px solid var(--border);
+    background: var(--bg-subtle);
   }
   .pay-card-header .card-title {
     font-size: 0.6875rem;
@@ -206,91 +329,57 @@
     flex: 1;
   }
   .date-badge {
-    background: var(--info-bg);   /* semantic.info-bg — #e1eff7 */
-    color: var(--info);           /* semantic.info — #006fd6 */
+    background: var(--info-bg);
+    color: var(--info);
     font-size: 0.6875rem;
     font-weight: 700;
     padding: 3px 10px;
     border-radius: var(--r-full);
-    letter-spacing: 0.03em;
+    letter-spacing: 0.04em;
   }
 
-  /* Gross row */
   .gross-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    padding: 16px 18px 14px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--border);
   }
-  .gross-row .gross-label {
-    font-size: 1rem;
-    font-weight: 700;
-  }
-  .gross-row .gross-amount {
-    font-size: 1rem;
-    font-weight: 700;
-  }
+  .gross-row .gross-label { font-size: 1rem; font-weight: 700; }
+  .gross-row .gross-amount { font-size: 1rem; font-weight: 700; }
 
-  /* Deduction block */
   .deduct-block {
-    padding: 14px 18px 2px;
+    padding: 14px 20px 4px;
     border-bottom: 1px solid var(--border);
   }
   .deduct-line {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 12px;
-    gap: 10px;
+    margin-bottom: 10px;
+    gap: 12px;
   }
-  .deduct-left {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .deduct-dash {
-    color: var(--text-secondary);
-    font-size: 0.9375rem;
-    width: 12px;
-    text-align: center;
-    flex-shrink: 0;
-  }
-  .deduct-name {
-    font-size: 0.9375rem;
-    color: var(--text);
-    font-weight: 400;
-  }
-  .deduct-amount {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--red);
-    flex-shrink: 0;
-  }
+  .deduct-left { display: flex; align-items: center; gap: 10px; }
+  .deduct-dash { color: var(--text-secondary); font-size: 1rem; flex-shrink: 0; }
+  .deduct-name { font-size: 0.9375rem; color: var(--text); }
+  .deduct-amount { font-size: 0.9375rem; font-weight: 600; color: var(--red); flex-shrink: 0; }
 
-  /* ── EXPLAIN PATTERN ── */
-  .explain-wrap {
-    margin-bottom: 14px;
-  }
-
-  /* Collapsed trigger */
+  /* Explain pattern */
+  .explain-wrap { margin-bottom: 14px; }
   .explain-trigger {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 12px;
-    padding: 11px 14px;
-    background: var(--bg-subtle);    /* background.subtle — #fafafa */
-    border: 1px solid var(--border); /* neutral.border — #e0e0e0 */
+    gap: 16px;
+    padding: 10px 14px;
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
     border-radius: var(--r-lg);
     cursor: pointer;
-    transition: border-color 0.15s, background 0.15s;
+    transition: border-color 0.13s, background 0.13s;
     user-select: none;
   }
-  .explain-trigger:hover {
-    border-color: var(--orange-border);
-    background: var(--orange-pale);
-  }
+  .explain-trigger:hover { border-color: var(--orange-border); background: var(--orange-pale); }
   .explain-trigger.is-open {
     background: var(--white);
     border-color: var(--orange);
@@ -298,36 +387,12 @@
     border-bottom-right-radius: 0;
     border-bottom-color: transparent;
   }
-  .explain-trigger-left {
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
-  }
-  .explain-i {
-    font-style: italic;
-    font-size: 0.8125rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-    margin-top: 1px;
-    flex-shrink: 0;
-  }
-  .explain-q {
-    font-size: 0.875rem;
-    font-weight: 600;
-    color: var(--text);
-    line-height: 1.4;
-  }
-  .explain-cta {
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--orange);
-    text-align: right;
-    flex-shrink: 0;
-    line-height: 1.45;
-  }
-  .explain-cta .arrow { display: block; }
+  .explain-trigger-left { display: flex; align-items: flex-start; gap: 8px; }
+  .explain-i { font-style: italic; font-size: 0.8125rem; font-weight: 700; color: var(--text-secondary); margin-top: 1px; flex-shrink: 0; }
+  .explain-q { font-size: 0.875rem; font-weight: 600; color: var(--text); line-height: 1.4; }
+  .explain-cta { font-size: 0.75rem; font-weight: 600; color: var(--orange); text-align: right; flex-shrink: 0; line-height: 1.5; white-space: nowrap; }
+  .explain-cta .arrow { display: block; text-align: right; }
 
-  /* Expanded panel */
   .explain-panel {
     display: none;
     border: 1px solid var(--orange);
@@ -337,399 +402,511 @@
     overflow: hidden;
   }
   .explain-panel.is-open { display: block; }
-
   .panel-head {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
-    gap: 10px;
+    gap: 12px;
     padding: 12px 14px 6px;
   }
-  .panel-head-left {
-    display: flex;
-    align-items: flex-start;
-    gap: 7px;
-  }
-  .panel-title {
-    font-size: 0.9375rem;
-    font-weight: 700;
-    color: var(--text);
-    line-height: 1.35;
-  }
+  .panel-head-left { display: flex; align-items: flex-start; gap: 8px; }
+  .panel-title { font-size: 0.9375rem; font-weight: 700; color: var(--text); line-height: 1.35; }
   .panel-hide {
-    font-size: 0.8125rem;
-    font-weight: 600;
-    color: var(--orange);
-    background: none;
-    border: none;
-    cursor: pointer;
-    white-space: nowrap;
-    padding: 0;
-    font-family: var(--font);
-    flex-shrink: 0;
-    margin-top: 1px;
+    font-size: 0.8125rem; font-weight: 600; color: var(--orange);
+    background: none; border: none; cursor: pointer; white-space: nowrap;
+    padding: 0; font-family: var(--font); flex-shrink: 0; margin-top: 1px;
   }
-  .panel-body {
-    padding: 4px 14px 12px;
-    font-size: 0.875rem;
-    color: var(--text-secondary);
-    line-height: 1.7;
-  }
+  .panel-body { padding: 2px 14px 10px; font-size: 0.875rem; color: var(--text-secondary); line-height: 1.7; }
   .panel-data {
     margin: 0 14px 12px;
-    background: var(--orange-pale);          /* brand.orange-pale */
-    border: 1px solid var(--orange-border);  /* brand.orange-light */
+    background: var(--orange-pale);
+    border: 1px solid var(--orange-border);
     border-radius: var(--r-lg);
     padding: 12px 14px;
   }
-  .panel-data-row {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.875rem;
-    color: var(--text);
-    padding: 4px 0;
-  }
+  .panel-data-row { display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--text); padding: 4px 0; }
   .panel-data-row.total {
-    border-top: 1px solid var(--orange-border); /* brand.orange-light */
-    margin-top: 8px;
-    padding-top: 10px;
-    font-weight: 700;
-    font-size: 0.9375rem;
-    color: var(--orange);
+    border-top: 1px solid var(--orange-border);
+    margin-top: 8px; padding-top: 10px;
+    font-weight: 700; font-size: 0.9375rem; color: var(--orange);
   }
   .panel-confirm {
     margin: 0 14px 14px;
-    background: var(--green-bg);            /* semantic.success-bg — #f3f8f3 */
-    border: 1px solid var(--green-bg-alt);  /* semantic.success-bg-alt — #e8f5e9 */
+    background: var(--green-bg);
+    border: 1px solid var(--green-bg-alt);
     border-radius: var(--r-lg);
-    padding: 10px 14px;
-    font-size: 0.875rem;
-    color: var(--green);                    /* semantic.success — #2e7d31 */
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    padding: 9px 14px;
+    font-size: 0.875rem; color: var(--green); font-weight: 500;
+    display: flex; align-items: center; gap: 8px;
   }
 
-  /* ── TOTAL ROW ── */
   .total-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 18px;
-    background: var(--bg-subtle);    /* background.subtle — #fafafa */
+    padding: 16px 20px;
+    background: var(--bg-subtle);
     border-top: 1px solid var(--border);
   }
   .total-row .total-label { font-size: 1rem; font-weight: 700; }
-  .total-row .total-val {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--green);
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
+  .total-row .total-val { font-size: 1rem; font-weight: 700; color: var(--green); display: flex; align-items: center; gap: 5px; }
 
-  /* ── SCROLL HINT ── */
-  .scroll-hint {
-    display: flex;
-    justify-content: center;
-    padding: 10px 0 4px;
-    background: var(--white);
-    border-top: 1px solid var(--border);
-  }
-  .scroll-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: var(--r-full);
+  /* ── RIGHT PANEL ── */
+  .right-panel { display: flex; flex-direction: column; gap: 14px; }
+
+  .panel-card {
     background: var(--white);
     border: 1px solid var(--border);
-    box-shadow: 0 1px 4px rgba(0,0,0,0.10);
+    border-radius: var(--r-xl);
+    padding: 18px 20px;
+    box-shadow: var(--shadow-sm);
+  }
+  .panel-card-title {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .panel-card-title .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--orange);
+    flex-shrink: 0;
+  }
+
+  /* Breakdown donut-style bar */
+  .breakdown-bar {
+    height: 8px;
+    border-radius: var(--r-full);
+    background: var(--border);
+    overflow: hidden;
+    margin-bottom: 12px;
+    display: flex;
+  }
+  .bar-seg { height: 100%; }
+
+  .breakdown-legend { display: flex; flex-direction: column; gap: 8px; }
+  .legend-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.8125rem;
+  }
+  .legend-left { display: flex; align-items: center; gap: 8px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .legend-label { color: var(--text-secondary); }
+  .legend-val { font-weight: 600; color: var(--text); }
+  .legend-pct { font-size: 0.6875rem; color: var(--text-disabled); margin-left: 4px; }
+
+  /* Action items */
+  .action-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+  }
+  .action-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .action-icon {
+    width: 32px; height: 32px;
+    border-radius: var(--r-md);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+  }
+  .action-icon.orange { background: var(--orange-pale); }
+  .action-icon.green  { background: var(--green-bg); }
+  .action-icon.red    { background: var(--red-bg); }
+  .action-icon.info   { background: var(--info-bg); }
+  .action-text h4 { font-size: 0.875rem; font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .action-text p  { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; }
+  .action-arrow { margin-left: auto; color: var(--text-disabled); font-size: 0.875rem; flex-shrink: 0; align-self: center; }
+
+  /* Primary button */
+  .btn-primary {
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
+    gap: 6px;
+    width: 100%;
+    padding: 11px 20px;
+    background: var(--orange);
+    border: none;
+    border-radius: var(--r-2xl);
+    color: var(--white);
+    font-family: var(--font);
     font-size: 0.9375rem;
-    color: var(--text);
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.13s;
   }
+  .btn-primary:hover { background: var(--orange-hover); }
 </style>
 </head>
 <body>
-<div class="frame">
 
-  <!-- ── HEADER ── -->
-  <div class="header">
-    <div class="header-left">
+<!-- ════════════════════════════════
+     SIDEBAR
+════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <span class="logo-icon">🍊</span>
+    <div>
+      <div class="logo-text">Pathfinder</div>
+      <div class="logo-sub">by Tangerine</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Menu</div>
+
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      Home
+    </button>
+    <button class="nav-item active">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Paycheque
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l4-8 4 4 4-6 4 5"/></svg>
+      Roadmap
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      Goals
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Reminders
+    </button>
+  </div>
+
+  <div class="sidebar-section" style="margin-top:8px">
+    <div class="sidebar-section-label">Learn</div>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      Glossary
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Help
+    </button>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user">
+      <div class="avatar">AC</div>
+      <div class="sidebar-user-info">
+        <div class="name">Angel Chen</div>
+        <div class="plan">Newcomer plan · Week 1</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════════════════════════════
+     MAIN
+════════════════════════════════ -->
+<div class="main">
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
       <h1>Good morning, Angel</h1>
       <p>Week 1 · Newcomer plan · 7% savings target</p>
     </div>
-    <div class="header-right">
-      <span class="header-date">May 2026</span>
-      <div class="avatar">AC</div>
+    <div class="topbar-right">
+      <span class="topbar-date">May 2026</span>
+      <div class="topbar-avatar">AC</div>
     </div>
+  </header>
+
+  <!-- URGENT BANNER -->
+  <div class="urgent-banner">
+    <div class="urgent-banner-text">
+      🚨 <strong>RRSP matching deadline in 18 days</strong> — you could miss $1,944/year in free employer contributions.
+    </div>
+    <button class="urgent-banner-action">Start walkthrough →</button>
   </div>
 
-  <!-- ── NAV TABS ── -->
-  <div class="nav-tabs">
-    <button class="nav-tab">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
-      Home
-    </button>
-    <button class="nav-tab active">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-      Paycheque
-    </button>
-    <button class="nav-tab">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 17l4-8 4 4 4-6 4 5"/></svg>
-      Roadmap
-    </button>
-    <button class="nav-tab">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
-      Goals
-    </button>
-  </div>
+  <!-- CONTENT -->
+  <div class="content">
 
-  <!-- ── STAT ROW ── -->
-  <div class="stat-row">
-    <div class="stat-cell">
-      <div class="stat-label">Take-home pay</div>
-      <div class="stat-value">$3,976</div>
-      <div class="stat-sub">after all deductions</div>
-    </div>
-    <div class="stat-cell">
-      <div class="stat-label">Saved this month</div>
-      <div class="stat-value green">$278</div>
-      <div class="stat-sub">7% of $3,976</div>
-    </div>
-  </div>
-
-  <!-- ── PAYCHEQUE CARD ── -->
-  <div class="pay-card">
-
-    <!-- Card header -->
-    <div class="pay-card-header">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
-      <span class="card-title">Paycheque breakdown</span>
-      <span class="date-badge">MAY 15</span>
-    </div>
-
-    <!-- Gross pay -->
-    <div class="gross-row">
-      <span class="gross-label">Gross pay</span>
-      <span class="gross-amount">$5,667</span>
-    </div>
-
-    <!-- Income tax -->
-    <div class="deduct-block">
-      <div class="deduct-line">
-        <div class="deduct-left">
-          <span class="deduct-dash">−</span>
-          <span class="deduct-name">Income tax</span>
-        </div>
-        <span class="deduct-amount">−$1,063</span>
+    <!-- STATS ROW -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Take-home pay</div>
+        <div class="stat-value">$3,976</div>
+        <div class="stat-sub">after all deductions</div>
       </div>
-      <div class="explain-wrap">
-        <div class="explain-trigger" id="t-tax" onclick="toggle('tax')">
-          <div class="explain-trigger-left">
-            <span class="explain-i">i</span>
-            <span class="explain-q">What is income tax?</span>
-          </div>
-          <div class="explain-cta" id="cta-tax">
-            Explain in plain language
-            <span class="arrow">↓</span>
-          </div>
+      <div class="stat-card success">
+        <div class="stat-label">Saved this month</div>
+        <div class="stat-value green">$278</div>
+        <div class="stat-sub">7% of $3,976 · on track</div>
+      </div>
+      <div class="stat-card danger">
+        <div class="stat-label">Bank fees</div>
+        <div class="stat-value red">$16.95</div>
+        <div class="stat-sub">$203/year — avoidable</div>
+      </div>
+      <div class="stat-card highlight">
+        <div class="stat-label">RRSP match available</div>
+        <div class="stat-value orange">$1,944</div>
+        <div class="stat-sub">free/year · 18 days left</div>
+      </div>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="content-grid">
+
+      <!-- LEFT: Paycheque breakdown -->
+      <div class="pay-card">
+        <div class="pay-card-header">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--text-secondary)" stroke-width="2.2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+          <span class="card-title">Paycheque breakdown</span>
+          <span class="date-badge">MAY 15</span>
         </div>
-        <div class="explain-panel" id="p-tax">
-          <div class="panel-head">
-            <div class="panel-head-left">
-              <span class="explain-i">i</span>
-              <span class="panel-title">What is income tax?</span>
+
+        <div class="gross-row">
+          <span class="gross-label">Gross pay</span>
+          <span class="gross-amount">$5,667</span>
+        </div>
+
+        <!-- Income tax -->
+        <div class="deduct-block">
+          <div class="deduct-line">
+            <div class="deduct-left">
+              <span class="deduct-dash">−</span>
+              <span class="deduct-name">Income tax</span>
             </div>
-            <button class="panel-hide" onclick="toggle('tax')">Hide ↑</button>
+            <span class="deduct-amount">−$1,063</span>
           </div>
-          <div class="panel-body">
-            Income tax is what you pay to the government based on how much you earn. Canada has two layers: federal (goes to Ottawa) and provincial (stays in Ontario). The more you earn, the higher percentage you pay — this is called a progressive tax system.
-          </div>
-          <div class="panel-data">
-            <div class="panel-data-row"><span>Federal income tax</span><span>−$842</span></div>
-            <div class="panel-data-row"><span>Ontario provincial tax</span><span>−$221</span></div>
-            <div class="panel-data-row total"><span>Total income tax</span><span>−$1,063 ✓</span></div>
-          </div>
-          <div class="panel-confirm">
-            <span>✓</span> Normal for your income level in Ontario.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CPP -->
-    <div class="deduct-block">
-      <div class="deduct-line">
-        <div class="deduct-left">
-          <span class="deduct-dash">−</span>
-          <span class="deduct-name">CPP contribution</span>
-        </div>
-        <span class="deduct-amount">−$364</span>
-      </div>
-      <div class="explain-wrap">
-        <div class="explain-trigger" id="t-cpp" onclick="toggle('cpp')">
-          <div class="explain-trigger-left">
-            <span class="explain-i">i</span>
-            <span class="explain-q">What is CPP?</span>
-          </div>
-          <div class="explain-cta" id="cta-cpp">
-            Explain in plain language
-            <span class="arrow">↓</span>
-          </div>
-        </div>
-        <div class="explain-panel" id="p-cpp">
-          <div class="panel-head">
-            <div class="panel-head-left">
-              <span class="explain-i">i</span>
-              <span class="panel-title">What is CPP?</span>
+          <div class="explain-wrap">
+            <div class="explain-trigger" id="t-tax" onclick="toggle('tax')">
+              <div class="explain-trigger-left">
+                <span class="explain-i">i</span>
+                <span class="explain-q">What is income tax?</span>
+              </div>
+              <div class="explain-cta" id="cta-tax">Explain in plain language<span class="arrow">↓</span></div>
             </div>
-            <button class="panel-hide" onclick="toggle('cpp')">Hide ↑</button>
-          </div>
-          <div class="panel-body">
-            CPP stands for Canada Pension Plan — a forced retirement fund. Every paycheque you contribute, and your employer matches it dollar-for-dollar. When you retire, you receive monthly payments from this fund.
-          </div>
-          <div class="panel-data">
-            <div class="panel-data-row"><span>Your contribution</span><span>−$364</span></div>
-            <div class="panel-data-row"><span>Employer matches</span><span>+$364 free</span></div>
-            <div class="panel-data-row total"><span>Total toward your pension</span><span>$728 ✓</span></div>
-          </div>
-          <div class="panel-confirm">
-            <span>✓</span> You get this back as pension payments when you retire.
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- EI -->
-    <div class="deduct-block">
-      <div class="deduct-line">
-        <div class="deduct-left">
-          <span class="deduct-dash">−</span>
-          <span class="deduct-name">EI premium</span>
-        </div>
-        <span class="deduct-amount">−$92</span>
-      </div>
-      <div class="explain-wrap">
-        <div class="explain-trigger" id="t-ei" onclick="toggle('ei')">
-          <div class="explain-trigger-left">
-            <span class="explain-i">i</span>
-            <span class="explain-q">What is EI?</span>
-          </div>
-          <div class="explain-cta" id="cta-ei">
-            Explain in plain language
-            <span class="arrow">↓</span>
-          </div>
-        </div>
-        <div class="explain-panel" id="p-ei">
-          <div class="panel-head">
-            <div class="panel-head-left">
-              <span class="explain-i">i</span>
-              <span class="panel-title">What is EI?</span>
+            <div class="explain-panel" id="p-tax">
+              <div class="panel-head">
+                <div class="panel-head-left"><span class="explain-i">i</span><span class="panel-title">What is income tax?</span></div>
+                <button class="panel-hide" onclick="toggle('tax')">Hide ↑</button>
+              </div>
+              <div class="panel-body">Canada has two layers of income tax: federal (goes to Ottawa) and provincial (stays in Ontario). The more you earn, the higher percentage you pay — this is called a progressive tax system.</div>
+              <div class="panel-data">
+                <div class="panel-data-row"><span>Federal income tax</span><span>−$842</span></div>
+                <div class="panel-data-row"><span>Ontario provincial tax</span><span>−$221</span></div>
+                <div class="panel-data-row total"><span>Total income tax</span><span>−$1,063 ✓</span></div>
+              </div>
+              <div class="panel-confirm"><span>✓</span> Normal for your income level in Ontario.</div>
             </div>
-            <button class="panel-hide" onclick="toggle('ei')">Hide ↑</button>
-          </div>
-          <div class="panel-body">
-            EI is Employment Insurance — job-loss insurance. If you're laid off or take parental leave, EI pays you a portion of your income while you find work or care for family. You pay a small premium every paycheque to stay covered.
-          </div>
-          <div class="panel-data">
-            <div class="panel-data-row"><span>Your annual EI premium</span><span>~$1,049</span></div>
-            <div class="panel-data-row"><span>Max annual benefit if needed</span><span>up to $35,220</span></div>
-            <div class="panel-data-row total"><span>Coverage ratio</span><span>33× your cost ✓</span></div>
-          </div>
-          <div class="panel-confirm">
-            <span>✓</span> Small cost, big protection — especially in your first year.
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- RRSP -->
-    <div class="deduct-block">
-      <div class="deduct-line">
-        <div class="deduct-left">
-          <span class="deduct-dash">−</span>
-          <span class="deduct-name">RRSP contribution</span>
-        </div>
-        <span class="deduct-amount">−$170</span>
-      </div>
-      <div class="explain-wrap">
-        <div class="explain-trigger" id="t-rrsp" onclick="toggle('rrsp')">
-          <div class="explain-trigger-left">
-            <span class="explain-i">i</span>
-            <span class="explain-q">What is RRSP contribution room?</span>
-          </div>
-          <div class="explain-cta" id="cta-rrsp">
-            Explain in plain language
-            <span class="arrow">↓</span>
-          </div>
-        </div>
-        <div class="explain-panel" id="p-rrsp">
-          <div class="panel-head">
-            <div class="panel-head-left">
-              <span class="explain-i">i</span>
-              <span class="panel-title">What is RRSP contribution room?</span>
+        <!-- CPP -->
+        <div class="deduct-block">
+          <div class="deduct-line">
+            <div class="deduct-left">
+              <span class="deduct-dash">−</span>
+              <span class="deduct-name">CPP contribution</span>
             </div>
-            <button class="panel-hide" onclick="toggle('rrsp')">Hide ↑</button>
+            <span class="deduct-amount">−$364</span>
           </div>
-          <div class="panel-body">
-            Every year, the CRA gives you a limit on how much you can put into your RRSP. It grows at 18% of last year's income. Think of it as a bucket — once it's full for the year, you can't add more.
-          </div>
-          <div class="panel-data">
-            <div class="panel-data-row"><span>Your 2026 RRSP room (est.)</span><span>$11,664</span></div>
-            <div class="panel-data-row"><span>This contribution uses</span><span>$1,944</span></div>
-            <div class="panel-data-row total"><span>Room remaining after</span><span>$9,720 ✓</span></div>
-          </div>
-          <div class="panel-confirm">
-            <span>✓</span> You have plenty of room — this contribution is safe.
+          <div class="explain-wrap">
+            <div class="explain-trigger" id="t-cpp" onclick="toggle('cpp')">
+              <div class="explain-trigger-left">
+                <span class="explain-i">i</span>
+                <span class="explain-q">What is CPP?</span>
+              </div>
+              <div class="explain-cta" id="cta-cpp">Explain in plain language<span class="arrow">↓</span></div>
+            </div>
+            <div class="explain-panel" id="p-cpp">
+              <div class="panel-head">
+                <div class="panel-head-left"><span class="explain-i">i</span><span class="panel-title">What is CPP?</span></div>
+                <button class="panel-hide" onclick="toggle('cpp')">Hide ↑</button>
+              </div>
+              <div class="panel-body">CPP is the Canada Pension Plan — a forced retirement fund. Every paycheque you contribute, and your employer matches it dollar-for-dollar. When you retire, you receive monthly payments.</div>
+              <div class="panel-data">
+                <div class="panel-data-row"><span>Your contribution</span><span>−$364</span></div>
+                <div class="panel-data-row"><span>Employer matches</span><span>+$364 free</span></div>
+                <div class="panel-data-row total"><span>Total toward your pension</span><span>$728 ✓</span></div>
+              </div>
+              <div class="panel-confirm"><span>✓</span> You get this back as pension payments when you retire.</div>
+            </div>
           </div>
         </div>
+
+        <!-- EI -->
+        <div class="deduct-block">
+          <div class="deduct-line">
+            <div class="deduct-left">
+              <span class="deduct-dash">−</span>
+              <span class="deduct-name">EI premium</span>
+            </div>
+            <span class="deduct-amount">−$92</span>
+          </div>
+          <div class="explain-wrap">
+            <div class="explain-trigger" id="t-ei" onclick="toggle('ei')">
+              <div class="explain-trigger-left">
+                <span class="explain-i">i</span>
+                <span class="explain-q">What is EI?</span>
+              </div>
+              <div class="explain-cta" id="cta-ei">Explain in plain language<span class="arrow">↓</span></div>
+            </div>
+            <div class="explain-panel" id="p-ei">
+              <div class="panel-head">
+                <div class="panel-head-left"><span class="explain-i">i</span><span class="panel-title">What is EI?</span></div>
+                <button class="panel-hide" onclick="toggle('ei')">Hide ↑</button>
+              </div>
+              <div class="panel-body">EI is Employment Insurance — if you're laid off or take parental leave, it pays a portion of your income while you find work or care for family.</div>
+              <div class="panel-data">
+                <div class="panel-data-row"><span>Your annual EI premium</span><span>~$1,049</span></div>
+                <div class="panel-data-row"><span>Max annual benefit if needed</span><span>up to $35,220</span></div>
+                <div class="panel-data-row total"><span>Coverage ratio</span><span>33× your cost ✓</span></div>
+              </div>
+              <div class="panel-confirm"><span>✓</span> Small cost, big protection — especially in your first year.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RRSP -->
+        <div class="deduct-block">
+          <div class="deduct-line">
+            <div class="deduct-left">
+              <span class="deduct-dash">−</span>
+              <span class="deduct-name">RRSP contribution</span>
+            </div>
+            <span class="deduct-amount">−$170</span>
+          </div>
+          <div class="explain-wrap">
+            <div class="explain-trigger" id="t-rrsp" onclick="toggle('rrsp')">
+              <div class="explain-trigger-left">
+                <span class="explain-i">i</span>
+                <span class="explain-q">What is RRSP contribution room?</span>
+              </div>
+              <div class="explain-cta" id="cta-rrsp">Explain in plain language<span class="arrow">↓</span></div>
+            </div>
+            <div class="explain-panel" id="p-rrsp">
+              <div class="panel-head">
+                <div class="panel-head-left"><span class="explain-i">i</span><span class="panel-title">What is RRSP contribution room?</span></div>
+                <button class="panel-hide" onclick="toggle('rrsp')">Hide ↑</button>
+              </div>
+              <div class="panel-body">Every year, the CRA gives you a limit on how much you can put into your RRSP. It grows at 18% of last year's income. Think of it as a bucket — once it's full for the year, you can't add more.</div>
+              <div class="panel-data">
+                <div class="panel-data-row"><span>Your 2026 RRSP room (est.)</span><span>$11,664</span></div>
+                <div class="panel-data-row"><span>This contribution uses</span><span>$1,944</span></div>
+                <div class="panel-data-row total"><span>Room remaining after</span><span>$9,720 ✓</span></div>
+              </div>
+              <div class="panel-confirm"><span>✓</span> You have plenty of room — this contribution is safe.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="total-row">
+          <span class="total-label">Take-home pay</span>
+          <span class="total-val">$3,976 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
+        </div>
       </div>
-    </div>
 
-    <!-- Take-home total -->
-    <div class="total-row">
-      <span class="total-label">Take-home pay</span>
-      <span class="total-val">
-        $3,976
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-      </span>
-    </div>
+      <!-- RIGHT PANEL -->
+      <div class="right-panel">
 
-    <!-- Scroll hint -->
-    <div class="scroll-hint">
-      <button class="scroll-btn">↓</button>
-    </div>
+        <!-- Pay breakdown visual -->
+        <div class="panel-card">
+          <div class="panel-card-title"><span class="dot"></span> Where your gross pay goes</div>
+          <div class="breakdown-bar">
+            <div class="bar-seg" style="width:70.2%;background:var(--green)"></div>
+            <div class="bar-seg" style="width:18.8%;background:var(--red)"></div>
+            <div class="bar-seg" style="width:6.4%;background:#bdbdbd"></div>
+            <div class="bar-seg" style="width:4.6%;background:var(--orange)"></div>
+          </div>
+          <div class="breakdown-legend">
+            <div class="legend-row">
+              <div class="legend-left"><div class="legend-dot" style="background:var(--green)"></div><span class="legend-label">Take-home</span></div>
+              <div><span class="legend-val">$3,976</span><span class="legend-pct">70.2%</span></div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-left"><div class="legend-dot" style="background:var(--red)"></div><span class="legend-label">Income tax</span></div>
+              <div><span class="legend-val">$1,063</span><span class="legend-pct">18.8%</span></div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-left"><div class="legend-dot" style="background:#bdbdbd"></div><span class="legend-label">CPP + EI</span></div>
+              <div><span class="legend-val">$456</span><span class="legend-pct">6.4%</span></div>
+            </div>
+            <div class="legend-row">
+              <div class="legend-left"><div class="legend-dot" style="background:var(--orange)"></div><span class="legend-label">RRSP</span></div>
+              <div><span class="legend-val">$170</span><span class="legend-pct">3.0%</span></div>
+            </div>
+          </div>
+        </div>
 
-  </div><!-- /pay-card -->
+        <!-- Next actions -->
+        <div class="panel-card">
+          <div class="panel-card-title"><span class="dot"></span> Recommended actions</div>
+          <div class="action-item">
+            <div class="action-icon red">🚨</div>
+            <div class="action-text">
+              <h4>Enrol in RRSP matching</h4>
+              <p>Deadline June 11 — $1,944/year free</p>
+            </div>
+            <span class="action-arrow">›</span>
+          </div>
+          <div class="action-item">
+            <div class="action-icon orange">🏦</div>
+            <div class="action-text">
+              <h4>Switch to no-fee account</h4>
+              <p>Save $203/year on bank fees</p>
+            </div>
+            <span class="action-arrow">›</span>
+          </div>
+          <div class="action-item">
+            <div class="action-icon info">💳</div>
+            <div class="action-text">
+              <h4>Upgrade your credit card</h4>
+              <p>Earn ~$270/year on current spend</p>
+            </div>
+            <span class="action-arrow">›</span>
+          </div>
+          <div class="action-item">
+            <div class="action-icon green">📈</div>
+            <div class="action-text">
+              <h4>Start emergency fund</h4>
+              <p>$500 auto-transfer to get started</p>
+            </div>
+            <span class="action-arrow">›</span>
+          </div>
+          <div style="margin-top:14px">
+            <button class="btn-primary">View full roadmap →</button>
+          </div>
+        </div>
 
-</div><!-- /frame -->
+      </div><!-- /right-panel -->
+    </div><!-- /content-grid -->
+  </div><!-- /content -->
+</div><!-- /main -->
 
 <script>
   const keys = ['tax','cpp','ei','rrsp'];
-
   function toggle(key) {
-    const trigger = document.getElementById('t-' + key);
-    const panel   = document.getElementById('p-' + key);
-    const cta     = document.getElementById('cta-' + key);
-    const opening = !panel.classList.contains('is-open');
-
-    // Close all
+    const opening = !document.getElementById('p-' + key).classList.contains('is-open');
     keys.forEach(k => {
       document.getElementById('t-' + k).classList.remove('is-open');
       document.getElementById('p-' + k).classList.remove('is-open');
-      document.getElementById('cta-' + k).innerHTML =
-        'Explain in plain language<span class="arrow">↓</span>';
+      document.getElementById('cta-' + k).innerHTML = 'Explain in plain language<span class="arrow">↓</span>';
     });
-
     if (opening) {
-      trigger.classList.add('is-open');
-      panel.classList.add('is-open');
-      cta.innerHTML = 'Hide<span class="arrow">↑</span>';
+      document.getElementById('t-' + key).classList.add('is-open');
+      document.getElementById('p-' + key).classList.add('is-open');
+      document.getElementById('cta-' + key).innerHTML = 'Hide<span class="arrow">↑</span>';
     }
   }
 </script>
