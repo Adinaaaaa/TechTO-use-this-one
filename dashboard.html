@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Clementine — Dashboard</title>
+<style>
+  :root {
+    --orange:        #f2691d;
+    --orange-hover:  #e65100;
+    --orange-pale:   #fff5ec;
+    --orange-border: #feac5b;
+    --text:          #3a3835;
+    --text-secondary:#616161;
+    --text-disabled: #bdbdbd;
+    --white:         #ffffff;
+    --bg:            #f7f7f7;
+    --bg-nav-hover:  #ececec;
+    --border:        #e0e0e0;
+    --green:         #2e7d31;
+    --green-bg:      #f3f8f3;
+    --green-bg-alt:  #e8f5e9;
+    --red:           #d50000;
+    --red-bg:        #fcf0f0;
+    --info:          #006fd6;
+    --info-bg:       #e1eff7;
+    --warning:       #8b6400;
+    --warning-bg:    #fff9c4;
+    --font: TangerineCircular, Arial, Helvetica, sans-serif;
+    --r-sm: 0.25rem; --r-md: 0.5rem; --r-lg: 0.75rem;
+    --r-xl: 1rem;    --r-2xl: 1.5rem; --r-full: 9999px;
+    --shadow-sm: 0 1px 4px rgba(0,0,0,0.08);
+    --shadow-md: 0 2px 12px rgba(0,0,0,0.10);
+    --sidebar-w: 220px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: var(--font); background: var(--bg); color: var(--text); min-height: 100vh; display: flex; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w); min-height: 100vh;
+    background: var(--white); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column; flex-shrink: 0;
+    position: fixed; top: 0; left: 0; z-index: 50;
+  }
+  .sidebar-logo {
+    display: flex; align-items: center; gap: 10px;
+    padding: 24px 20px 20px; border-bottom: 1px solid var(--border);
+  }
+  .logo-mark {
+    width: 32px; height: 32px; border-radius: var(--r-md);
+    background: var(--orange); display: flex; align-items: center;
+    justify-content: center; font-size: 1.1rem; flex-shrink: 0;
+  }
+  .logo-text  { font-size: 1.125rem; font-weight: 700; color: var(--orange); }
+  .logo-sub   { font-size: 0.6875rem; color: var(--text-secondary); margin-top: 1px; }
+
+  .sidebar-section { padding: 16px 12px 8px; }
+  .sidebar-section-label {
+    font-size: 0.625rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--text-disabled);
+    padding: 0 8px; margin-bottom: 6px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px; border-radius: var(--r-lg);
+    font-size: 0.9375rem; font-weight: 500; color: var(--text-secondary);
+    cursor: pointer; border: none; border-left: 3px solid transparent;
+    background: none; font-family: var(--font); width: 100%; text-align: left;
+    transition: all 0.13s; margin-bottom: 2px;
+  }
+  .nav-item:hover { background: var(--bg-nav-hover); color: var(--text); }
+  .nav-item.active { background: var(--orange-pale); color: var(--orange); border-left-color: var(--orange); font-weight: 600; }
+  .nav-item svg { flex-shrink: 0; }
+  .sidebar-bottom { margin-top: auto; padding: 16px 12px; border-top: 1px solid var(--border); }
+  .sidebar-user { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--r-lg); cursor: pointer; }
+  .sidebar-user:hover { background: var(--bg-nav-hover); }
+  .avatar {
+    width: 34px; height: 34px; border-radius: var(--r-full);
+    background: var(--orange-pale); color: var(--orange);
+    font-size: 0.75rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .sidebar-user-info .name { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+  .sidebar-user-info .plan { font-size: 0.6875rem; color: var(--text-secondary); margin-top: 1px; }
+
+  /* ── MAIN ── */
+  .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* TOPBAR */
+  .topbar {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 0 36px; height: 64px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 40;
+  }
+  .topbar-left h1 { font-size: 1.25rem; font-weight: 700; color: var(--text); }
+  .topbar-left p  { font-size: 0.8125rem; color: var(--text-secondary); margin-top: 1px; }
+  .topbar-right { display: flex; align-items: center; gap: 10px; }
+  .btn-customize {
+    display: flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border: 1.5px solid var(--border);
+    border-radius: var(--r-full); background: var(--white);
+    font-family: var(--font); font-size: 0.8125rem; font-weight: 600;
+    color: var(--text-secondary); cursor: pointer; transition: all 0.13s;
+  }
+  .btn-customize:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-pale); }
+  .btn-customize.active { border-color: var(--orange); color: var(--orange); background: var(--orange-pale); }
+  .topbar-avatar {
+    width: 36px; height: 36px; border-radius: var(--r-full);
+    background: var(--orange-pale); color: var(--orange);
+    font-size: 0.8125rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center; cursor: pointer;
+  }
+
+  /* CONTENT */
+  .content { padding: 28px 36px 64px; flex: 1; }
+
+  /* ══════════════════════════════
+     AI MEMORY STRIP
+  ══════════════════════════════ */
+  .memory-strip {
+    background: var(--white); border: 1px solid var(--border);
+    border-left: 3px solid var(--orange);
+    border-radius: var(--r-xl); padding: 16px 20px;
+    box-shadow: var(--shadow-sm); margin-bottom: 22px;
+    transition: box-shadow 0.2s;
+  }
+  .memory-strip:hover { box-shadow: var(--shadow-md); }
+  .memory-strip-top {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+  }
+  .ai-badge {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 0.75rem; font-weight: 700; color: var(--orange);
+    text-transform: uppercase; letter-spacing: 0.08em;
+  }
+  .ai-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--orange); animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(1.3); }
+  }
+  .memory-update {
+    font-size: 0.8125rem; font-weight: 600; color: var(--orange);
+    background: none; border: none; cursor: pointer; font-family: var(--font);
+    padding: 4px 10px; border-radius: var(--r-sm); transition: background 0.13s;
+  }
+  .memory-update:hover { background: var(--orange-pale); }
+  .memory-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .mem-chip {
+    display: flex; align-items: center; gap: 5px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--r-full); padding: 5px 12px;
+    font-size: 0.8125rem; color: var(--text); white-space: nowrap;
+  }
+  .mem-chip .chip-icon { font-size: 0.875rem; }
+  .mem-chip.highlight { background: var(--orange-pale); border-color: var(--orange-border); color: var(--text); }
+
+  /* ══════════════════════════════
+     STATS ROW
+  ══════════════════════════════ */
+  .stats-row {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 14px; margin-bottom: 22px;
+  }
+  .stat-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-top: 3px solid var(--border);
+    border-radius: var(--r-xl); padding: 18px 20px;
+    box-shadow: var(--shadow-sm); transition: box-shadow 0.2s;
+    position: relative;
+  }
+  .stat-card:hover { box-shadow: var(--shadow-md); }
+  .stat-card.c-orange { border-top-color: var(--orange); }
+  .stat-card.c-green  { border-top-color: var(--green); }
+  .stat-card.c-red    { border-top-color: var(--red); }
+  .stat-card.c-info   { border-top-color: var(--info); }
+  .stat-label { font-size: 0.75rem; color: var(--text-secondary); font-weight: 500; margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .stat-value { font-size: 1.75rem; font-weight: 700; color: var(--text); line-height: 1; margin-bottom: 4px; }
+  .stat-value.orange { color: var(--orange); }
+  .stat-value.green  { color: var(--green); }
+  .stat-value.red    { color: var(--red); }
+  .stat-value.info   { color: var(--info); }
+  .stat-sub { font-size: 0.75rem; color: var(--text-secondary); }
+  .stat-trend {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: 0.6875rem; font-weight: 700; padding: 2px 7px;
+    border-radius: var(--r-full); margin-top: 6px;
+  }
+  .stat-trend.up   { background: var(--green-bg); color: var(--green); }
+  .stat-trend.warn { background: var(--warning-bg); color: var(--warning); }
+  .pin-btn {
+    position: absolute; top: 12px; right: 12px;
+    background: none; border: none; cursor: pointer;
+    font-size: 0.875rem; opacity: 0; transition: opacity 0.13s;
+    color: var(--text-disabled);
+  }
+  .stat-card:hover .pin-btn { opacity: 1; }
+  .pin-btn.pinned { opacity: 1; color: var(--orange); }
+
+  /* ══════════════════════════════
+     CONTENT GRID
+  ══════════════════════════════ */
+  .content-grid {
+    display: grid; grid-template-columns: 1fr 320px;
+    gap: 20px; align-items: start;
+  }
+
+  /* ── SUGGESTIONS ── */
+  .suggestions-header {
+    display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px;
+  }
+  .suggestions-title {
+    font-size: 1rem; font-weight: 700; color: var(--text);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .ai-label {
+    font-size: 0.6875rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--orange);
+    background: var(--orange-pale); padding: 2px 8px; border-radius: var(--r-full);
+  }
+  .see-all {
+    font-size: 0.8125rem; font-weight: 600; color: var(--orange);
+    background: none; border: none; cursor: pointer; font-family: var(--font);
+  }
+
+  .suggestion-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--r-xl); padding: 18px 20px;
+    box-shadow: var(--shadow-sm); margin-bottom: 12px;
+    transition: box-shadow 0.2s, border-color 0.2s;
+    position: relative;
+  }
+  .suggestion-card:hover { box-shadow: var(--shadow-md); border-color: var(--orange-border); }
+  .suggestion-card:last-child { margin-bottom: 0; }
+  .suggestion-card.urgent { border-left: 3px solid var(--red); }
+  .suggestion-card.savings { border-left: 3px solid var(--green); }
+  .suggestion-card.growth  { border-left: 3px solid var(--info); }
+
+  .s-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
+  .s-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 0.6875rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+    padding: 3px 9px; border-radius: var(--r-full);
+  }
+  .s-badge.urgent  { background: var(--red-bg);      color: var(--red); }
+  .s-badge.savings { background: var(--green-bg);     color: var(--green); }
+  .s-badge.growth  { background: var(--info-bg);      color: var(--info); }
+  .s-badge.money   { background: var(--warning-bg);   color: var(--warning); }
+
+  .s-card-pin {
+    background: none; border: none; cursor: pointer; font-size: 1rem;
+    color: var(--text-disabled); transition: color 0.13s; flex-shrink: 0; padding: 0;
+  }
+  .s-card-pin:hover { color: var(--orange); }
+  .s-card-pin.pinned { color: var(--orange); }
+
+  .s-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+  .s-body  { font-size: 0.875rem; color: var(--text-secondary); line-height: 1.55; margin-bottom: 10px; }
+
+  .because-tag {
+    display: flex; align-items: flex-start; gap: 6px;
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: var(--r-lg); padding: 8px 12px;
+    font-size: 0.8125rem; color: var(--text-secondary); line-height: 1.4;
+    margin-bottom: 14px;
+  }
+  .because-tag .bc-label {
+    font-size: 0.75rem; font-weight: 700; color: var(--orange);
+    text-transform: uppercase; letter-spacing: 0.06em; flex-shrink: 0;
+  }
+
+  .s-action {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 18px; background: var(--orange); border: none;
+    border-radius: var(--r-2xl); color: var(--white); font-family: var(--font);
+    font-size: 0.875rem; font-weight: 700; cursor: pointer; transition: background 0.13s;
+  }
+  .s-action:hover { background: var(--orange-hover); }
+  .s-action.outline {
+    background: none; border: 1.5px solid var(--border); color: var(--text-secondary);
+  }
+  .s-action.outline:hover { border-color: var(--orange); color: var(--orange); background: var(--orange-pale); }
+
+  /* ── RIGHT PANEL ── */
+  .right-stack { display: flex; flex-direction: column; gap: 14px; }
+  .panel-card {
+    background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--r-xl); padding: 18px 20px; box-shadow: var(--shadow-sm);
+  }
+  .panel-title {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--text-secondary);
+    margin-bottom: 14px; display: flex; align-items: center; gap: 6px;
+  }
+  .panel-title .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); flex-shrink: 0; }
+
+  /* Growth timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; }
+  .tl-item {
+    display: flex; align-items: flex-start; gap: 12px; padding-bottom: 16px; position: relative;
+  }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-item::before {
+    content: ''; position: absolute; left: 11px; top: 22px;
+    width: 2px; bottom: 0; background: var(--border);
+  }
+  .tl-item:last-child::before { display: none; }
+  .tl-dot {
+    width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.75rem; font-weight: 700; z-index: 1;
+    border: 2px solid var(--border); background: var(--white);
+    color: var(--text-disabled);
+  }
+  .tl-dot.done    { background: var(--green);      border-color: var(--green);      color: var(--white); }
+  .tl-dot.current { background: var(--orange);     border-color: var(--orange);     color: var(--white); }
+  .tl-dot.future  { background: var(--white);      border-color: var(--border);     color: var(--text-disabled); }
+  .tl-content .tl-label { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+  .tl-content .tl-label.future { color: var(--text-secondary); }
+  .tl-content .tl-desc  { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; line-height: 1.4; }
+  .tl-content .tl-tag {
+    display: inline-block; margin-top: 4px; font-size: 0.6875rem; font-weight: 700;
+    padding: 2px 8px; border-radius: var(--r-full);
+  }
+  .tl-tag.done    { background: var(--green-bg);   color: var(--green); }
+  .tl-tag.current { background: var(--orange-pale); color: var(--orange); }
+  .tl-tag.future  { background: var(--bg);          color: var(--text-secondary); border: 1px solid var(--border); }
+
+  /* Quick access pinned */
+  .pinned-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer;
+    transition: background 0.13s; border-radius: var(--r-md);
+  }
+  .pinned-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .pinned-item:hover { color: var(--orange); }
+  .pinned-icon {
+    width: 32px; height: 32px; border-radius: var(--r-md);
+    background: var(--orange-pale); display: flex; align-items: center;
+    justify-content: center; font-size: 1rem; flex-shrink: 0;
+  }
+  .pinned-info .pi-label { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+  .pinned-info .pi-sub   { font-size: 0.75rem; color: var(--text-secondary); margin-top: 1px; }
+  .pinned-arrow { margin-left: auto; color: var(--text-disabled); font-size: 1rem; }
+
+  /* ══════════════════════════════
+     CUSTOMIZE PANEL
+  ══════════════════════════════ */
+  .customize-panel {
+    display: none; background: var(--white); border: 1px solid var(--border);
+    border-radius: var(--r-xl); padding: 20px 24px; margin-bottom: 22px;
+    box-shadow: var(--shadow-md);
+  }
+  .customize-panel.visible { display: block; }
+  .customize-panel h3 {
+    font-size: 0.9375rem; font-weight: 700; color: var(--text); margin-bottom: 4px;
+  }
+  .customize-panel p {
+    font-size: 0.8125rem; color: var(--text-secondary); margin-bottom: 16px;
+  }
+  .widget-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+  .widget-toggle {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 14px; border: 1.5px solid var(--border);
+    border-radius: var(--r-lg); cursor: pointer; transition: all 0.13s;
+    background: var(--bg);
+  }
+  .widget-toggle.on { border-color: var(--orange); background: var(--orange-pale); }
+  .widget-toggle:hover { border-color: var(--orange-border); }
+  .wt-label { font-size: 0.875rem; font-weight: 600; color: var(--text); }
+  .wt-icon  { font-size: 1.1rem; margin-bottom: 4px; }
+  .wt-check { font-size: 0.875rem; color: var(--orange); font-weight: 700; }
+  .wt-check.hidden { visibility: hidden; }
+</style>
+</head>
+<body>
+
+<!-- ════════ SIDEBAR ════════ -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo-mark">🍊</div>
+    <div>
+      <div class="logo-text">Clementine</div>
+      <div class="logo-sub">by Tangerine</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Menu</div>
+    <button class="nav-item active">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      Home
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>
+      Paycheque
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 17l4-8 4 4 4-6 4 5"/></svg>
+      Roadmap
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+      Goals
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      Reminders
+    </button>
+  </div>
+
+  <div class="sidebar-section" style="margin-top:8px">
+    <div class="sidebar-section-label">Learn</div>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
+      Glossary
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+      Help
+    </button>
+    <button class="nav-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      Settings
+    </button>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user">
+      <div class="avatar">AC</div>
+      <div class="sidebar-user-info">
+        <div class="name">Angel Chen</div>
+        <div class="plan">Newcomer · Week 1</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- ════════ MAIN ════════ -->
+<div class="main">
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>Good morning, Angel 👋</h1>
+      <p>Week 1 · Newcomer plan · Ontario, Canada</p>
+    </div>
+    <div class="topbar-right">
+      <button class="btn-customize" id="customizeBtn" onclick="toggleCustomize()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Customize
+      </button>
+      <div class="topbar-avatar">AC</div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- ══════════════════════════════
+         CUSTOMIZE PANEL
+    ══════════════════════════════ -->
+    <div class="customize-panel" id="customizePanel">
+      <h3>Customize your dashboard</h3>
+      <p>Choose which sections appear on your home screen.</p>
+      <div class="widget-grid">
+        <div class="widget-toggle on" onclick="toggleWidget(this, 'memory-strip')">
+          <div><div class="wt-icon">🧠</div><div class="wt-label">Memory strip</div></div>
+          <div class="wt-check">✓</div>
+        </div>
+        <div class="widget-toggle on" onclick="toggleWidget(this, 'stats-section')">
+          <div><div class="wt-icon">📊</div><div class="wt-label">Stats overview</div></div>
+          <div class="wt-check">✓</div>
+        </div>
+        <div class="widget-toggle on" onclick="toggleWidget(this, 'suggestions-section')">
+          <div><div class="wt-icon">✦</div><div class="wt-label">AI suggestions</div></div>
+          <div class="wt-check">✓</div>
+        </div>
+        <div class="widget-toggle on" onclick="toggleWidget(this, 'timeline-card')">
+          <div><div class="wt-icon">🗺️</div><div class="wt-label">Your journey</div></div>
+          <div class="wt-check">✓</div>
+        </div>
+        <div class="widget-toggle on" onclick="toggleWidget(this, 'pinned-card')">
+          <div><div class="wt-icon">📌</div><div class="wt-label">Pinned items</div></div>
+          <div class="wt-check">✓</div>
+        </div>
+        <div class="widget-toggle" onclick="toggleWidget(this, null)">
+          <div><div class="wt-icon">💬</div><div class="wt-label">Coaching tips</div></div>
+          <div class="wt-check hidden">✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         AI MEMORY STRIP
+    ══════════════════════════════ -->
+    <div class="memory-strip" id="memory-strip">
+      <div class="memory-strip-top">
+        <div class="ai-badge">
+          <div class="ai-dot"></div>
+          Clementine remembers
+        </div>
+        <button class="memory-update">Update profile →</button>
+      </div>
+      <div class="memory-chips">
+        <div class="mem-chip"><span class="chip-icon">📍</span> Ontario, Canada</div>
+        <div class="mem-chip"><span class="chip-icon">💼</span> First job · Week 1</div>
+        <div class="mem-chip"><span class="chip-icon">🌱</span> Just starting out</div>
+        <div class="mem-chip highlight"><span class="chip-icon">⏰</span> RRSP deadline: June 11</div>
+        <div class="mem-chip"><span class="chip-icon">💰</span> Gross pay: $5,667 / mo</div>
+        <div class="mem-chip"><span class="chip-icon">🎯</span> Savings target: 7%</div>
+        <div class="mem-chip"><span class="chip-icon">🏦</span> Sample data (no accounts linked)</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         STATS ROW
+    ══════════════════════════════ -->
+    <div class="stats-row" id="stats-section">
+      <div class="stat-card c-orange">
+        <button class="pin-btn pinned" title="Pinned">📌</button>
+        <div class="stat-label">Take-home pay</div>
+        <div class="stat-value">$3,976</div>
+        <div class="stat-sub">after all deductions</div>
+        <div class="stat-trend up">↑ on track</div>
+      </div>
+      <div class="stat-card c-green">
+        <button class="pin-btn" title="Pin this" onclick="this.classList.toggle('pinned')">📌</button>
+        <div class="stat-label">Saved this month</div>
+        <div class="stat-value green">$278</div>
+        <div class="stat-sub">7% of $3,976</div>
+        <div class="stat-trend up">✓ goal met</div>
+      </div>
+      <div class="stat-card c-red">
+        <button class="pin-btn" title="Pin this" onclick="this.classList.toggle('pinned')">📌</button>
+        <div class="stat-label">Avoidable fees</div>
+        <div class="stat-value red">$16.95</div>
+        <div class="stat-sub">$203 / year</div>
+        <div class="stat-trend warn">⚠ fixable</div>
+      </div>
+      <div class="stat-card c-info">
+        <button class="pin-btn" title="Pin this" onclick="this.classList.toggle('pinned')">📌</button>
+        <div class="stat-label">RRSP match available</div>
+        <div class="stat-value info">$1,944</div>
+        <div class="stat-sub">free / year · 18 days left</div>
+        <div class="stat-trend warn">⏰ act soon</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════
+         CONTENT GRID
+    ══════════════════════════════ -->
+    <div class="content-grid">
+
+      <!-- LEFT: AI Suggestions -->
+      <div id="suggestions-section">
+        <div class="suggestions-header">
+          <div class="suggestions-title">
+            Clementine suggests
+            <span class="ai-label">✦ AI</span>
+          </div>
+          <button class="see-all">See all →</button>
+        </div>
+
+        <!-- Suggestion 1 -->
+        <div class="suggestion-card urgent">
+          <div class="s-top">
+            <span class="s-badge urgent">⚡ This week</span>
+            <button class="s-card-pin pinned" title="Pinned" onclick="this.classList.toggle('pinned')">📌</button>
+          </div>
+          <div class="s-title">Enrol in RRSP matching before June 11</div>
+          <div class="s-body">Your employer matches up to 4% of your salary into your RRSP — that's $1,944 a year in free money. You're currently leaving it on the table.</div>
+          <div class="because-tag">
+            <span class="bc-label">✦ Why now</span>
+            <span>Clementine knows your deadline is 18 days away and you haven't enrolled yet. First-job newcomers who miss this often lose the match for a full year.</span>
+          </div>
+          <button class="s-action">Start 5-min walkthrough →</button>
+        </div>
+
+        <!-- Suggestion 2 -->
+        <div class="suggestion-card savings">
+          <div class="s-top">
+            <span class="s-badge savings">💰 Save money</span>
+            <button class="s-card-pin" title="Pin this" onclick="this.classList.toggle('pinned')">📌</button>
+          </div>
+          <div class="s-title">Switch to a no-fee bank account</div>
+          <div class="s-body">You're paying $16.95/month in bank fees — $203 a year that could go straight into your savings. Tangerine's chequing account has no monthly fees.</div>
+          <div class="because-tag">
+            <span class="bc-label">✦ Why you</span>
+            <span>Clementine noticed the fee pattern in your sample data. Newcomers in Week 1 often stick with their first account without realizing fee-free options exist.</span>
+          </div>
+          <button class="s-action outline">Compare accounts →</button>
+        </div>
+
+        <!-- Suggestion 3 -->
+        <div class="suggestion-card growth">
+          <div class="s-top">
+            <span class="s-badge growth">📈 Build credit</span>
+            <button class="s-card-pin" title="Pin this" onclick="this.classList.toggle('pinned')">📌</button>
+          </div>
+          <div class="s-title">Start building your credit score now</div>
+          <div class="s-body">A strong credit score unlocks better mortgage rates, rental approvals, and even some job applications. Week 1 is the best time to start the habit.</div>
+          <div class="because-tag">
+            <span class="bc-label">✦ Why now</span>
+            <span>Clementine knows you're a newcomer with no Canadian credit history yet. Starting in Week 1 gives you a 6-month head start before your first lease renewal.</span>
+          </div>
+          <button class="s-action outline">See credit guide →</button>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Journey + Pinned -->
+      <div class="right-stack">
+
+        <!-- Growth Timeline -->
+        <div class="panel-card" id="timeline-card">
+          <div class="panel-title"><span class="dot"></span> Your journey</div>
+          <div class="timeline">
+            <div class="tl-item">
+              <div class="tl-dot done">✓</div>
+              <div class="tl-content">
+                <div class="tl-label">Joined Clementine</div>
+                <div class="tl-desc">Set up profile, goals, literacy level</div>
+                <span class="tl-tag done">Done</span>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot current">→</div>
+              <div class="tl-content">
+                <div class="tl-label">Week 1 — You are here</div>
+                <div class="tl-desc">Understand your first paycheque, enrol in RRSP</div>
+                <span class="tl-tag current">In progress</span>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot future"></div>
+              <div class="tl-content">
+                <div class="tl-label future">Month 1 — First savings milestone</div>
+                <div class="tl-desc">$278 saved, emergency fund started</div>
+                <span class="tl-tag future">Upcoming</span>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot future"></div>
+              <div class="tl-content">
+                <div class="tl-label future">Month 3 — Credit building</div>
+                <div class="tl-desc">First credit card, score starts climbing</div>
+                <span class="tl-tag future">Upcoming</span>
+              </div>
+            </div>
+            <div class="tl-item">
+              <div class="tl-dot future"></div>
+              <div class="tl-content">
+                <div class="tl-label future">Year 1 — Financial foundation</div>
+                <div class="tl-desc">3-month emergency fund, credit score +60</div>
+                <span class="tl-tag future">Upcoming</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pinned Quick Access -->
+        <div class="panel-card" id="pinned-card">
+          <div class="panel-title"><span class="dot"></span> Pinned for you</div>
+          <div class="pinned-item">
+            <div class="pinned-icon">📄</div>
+            <div class="pinned-info">
+              <div class="pi-label">Paycheque breakdown</div>
+              <div class="pi-sub">May 15 · $3,976 take-home</div>
+            </div>
+            <span class="pinned-arrow">›</span>
+          </div>
+          <div class="pinned-item">
+            <div class="pinned-icon">🇨🇦</div>
+            <div class="pinned-info">
+              <div class="pi-label">CPP & EI explained</div>
+              <div class="pi-sub">Plain language · 2 min read</div>
+            </div>
+            <span class="pinned-arrow">›</span>
+          </div>
+          <div class="pinned-item">
+            <div class="pinned-icon">📈</div>
+            <div class="pinned-info">
+              <div class="pi-label">RRSP walkthrough</div>
+              <div class="pi-sub">5 steps · deadline in 18 days</div>
+            </div>
+            <span class="pinned-arrow">›</span>
+          </div>
+          <div class="pinned-item" style="border-top:1px dashed var(--border);margin-top:4px;padding-top:12px">
+            <div class="pinned-icon" style="background:var(--bg);border:1.5px dashed var(--border);">＋</div>
+            <div class="pinned-info">
+              <div class="pi-label" style="color:var(--text-secondary)">Add a shortcut</div>
+              <div class="pi-sub">Pin any page or topic</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /content-grid -->
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<script>
+  function toggleCustomize() {
+    const btn   = document.getElementById('customizeBtn');
+    const panel = document.getElementById('customizePanel');
+    btn.classList.toggle('active');
+    panel.classList.toggle('visible');
+  }
+
+  function toggleWidget(el, targetId) {
+    el.classList.toggle('on');
+    const check = el.querySelector('.wt-check');
+    check.classList.toggle('hidden');
+    if (targetId) {
+      const target = document.getElementById(targetId);
+      if (target) target.style.display = el.classList.contains('on') ? '' : 'none';
+    }
+  }
+</script>
+</body>
+</html>
