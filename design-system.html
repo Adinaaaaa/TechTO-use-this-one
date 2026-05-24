@@ -1,0 +1,1252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tangerine Design System</title>
+<style>
+  /* ─────────────────────────────────────────────────────────────────
+     TANGERINE DESIGN SYSTEM
+     All values extracted directly from tangerine.ca CSS
+     Font: TangerineCircular (falls back to Arial/Helvetica/sans-serif)
+  ───────────────────────────────────────────────────────────────── */
+
+  /* ── DESIGN TOKENS ── */
+  :root {
+    /* Colors — Brand */
+    --color-orange:        #f2691d;
+    --color-orange-hover:  #e65100;
+    --color-orange-dark:   #cc5310;
+
+    /* Colors — Text */
+    --color-text-primary:  #3a3835;
+    --color-text-secondary:#616161;
+    --color-text-disabled: #bdbdbd;
+    --color-text-white:    #ffffff;
+    --color-text-link:     #006fd6;
+
+    /* Colors — Backgrounds */
+    --color-bg-white:      #ffffff;
+    --color-bg-light:      #f7f7f7;
+    --color-bg-subtle:     #fafafa;
+    --color-bg-nav-hover:  #ececec;
+
+    /* Colors — Semantic Backgrounds */
+    --color-bg-orange:     #fff5ec;
+    --color-bg-red:        #fcf0f0;
+    --color-bg-green:      #f3f8f3;
+    --color-bg-green-alt:  #e8f5e9;
+    --color-bg-yellow:     #fff9c4;
+    --color-bg-blue:       #e1eff7;
+    --color-bg-teal:       #d8e9e7;
+    --color-bg-purple:     #f3e5f5;
+
+    /* Colors — Semantic Foreground */
+    --color-error:         #d50000;
+    --color-success:       #2e7d31;
+    --color-warning:       #8b6400;
+    --color-info:          #006fd6;
+
+    /* Colors — Dark Surface */
+    --color-dark:          #3a3835;
+    --color-dark-medium:   #424242;
+    --color-dark-light:    #616161;
+
+    /* Typography */
+    --font-family:         TangerineCircular, Arial, Helvetica, sans-serif;
+
+    /* Type Scale */
+    --text-h1-size:        2rem;       /* 32px */
+    --text-h1-weight:      700;
+    --text-h1-line:        2.5rem;
+
+    --text-h2-size:        1.75rem;    /* 28px */
+    --text-h2-weight:      700;
+    --text-h2-line:        2.5rem;
+
+    --text-h3-size:        1.5rem;     /* 24px */
+    --text-h3-weight:      700;
+    --text-h3-line:        2rem;
+
+    --text-h4-size:        1.375rem;   /* 22px */
+    --text-h4-weight:      500;
+    --text-h4-line:        2rem;
+
+    --text-h5-size:        1.25rem;    /* 20px */
+    --text-h5-weight:      700;
+    --text-h5-line:        1.5rem;
+
+    --text-h6-size:        1.125rem;   /* 18px */
+    --text-h6-weight:      700;
+    --text-h6-line:        1.5rem;
+
+    --text-body-lg-size:   1.125rem;   /* 18px */
+    --text-body-md-size:   1rem;       /* 16px */
+    --text-body-sm-size:   0.875rem;   /* 14px */
+    --text-body-xs-size:   0.75rem;    /* 12px */
+
+    /* Border Radius */
+    --radius-xs:   0.125rem;  /* 2px */
+    --radius-sm:   0.25rem;   /* 4px */
+    --radius-md:   0.5rem;    /* 8px */
+    --radius-lg:   0.75rem;   /* 12px */
+    --radius-xl:   1rem;      /* 16px */
+    --radius-2xl:  1.5rem;    /* 24px */
+    --radius-full: 9999px;
+
+    /* Spacing — from grid gutter system */
+    --space-1:  0.25rem;   /* 4px */
+    --space-2:  0.5rem;    /* 8px */
+    --space-3:  0.75rem;   /* 12px */
+    --space-4:  1rem;      /* 16px */
+    --space-5:  1.25rem;   /* 20px */
+    --space-6:  1.5rem;    /* 24px */
+    --space-8:  2rem;      /* 32px */
+    --space-10: 2.5rem;    /* 40px */
+    --space-12: 3rem;      /* 48px */
+    --space-16: 4rem;      /* 64px */
+
+    /* Shadows */
+    --shadow-card:  0 0 20px 0 rgba(0, 0, 0, 0.2);
+    --shadow-sm:    0 1px 4px rgba(0, 0, 0, 0.08);
+    --shadow-md:    0 2px 12px rgba(0, 0, 0, 0.10);
+
+    /* Breakpoints (for reference — use in media queries) */
+    --bp-xs:     375px;
+    --bp-small:  768px;
+    --bp-medium: 1024px;
+    --bp-large:  1280px;
+  }
+
+  /* ── BASE RESET ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: var(--font-family);
+    font-size: var(--text-body-md-size);
+    color: var(--color-text-primary);
+    background: var(--color-bg-light);
+    line-height: 1.5;
+  }
+
+  /* ── DS PAGE CHROME ── */
+  .ds-nav {
+    background: var(--color-dark);
+    color: var(--color-text-white);
+    padding: 0 2rem;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .ds-nav-logo { font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+  .ds-nav-links { display: flex; gap: 24px; font-size: 0.875rem; }
+  .ds-nav-links a { color: #bdbdbd; text-decoration: none; }
+  .ds-nav-links a:hover { color: #fff; }
+
+  .ds-page { max-width: 1120px; margin: 0 auto; padding: 3rem 2rem 6rem; }
+
+  .ds-section { margin-bottom: 4rem; }
+  .ds-section-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-text-secondary);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .ds-row { display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-start; margin-bottom: 1.5rem; }
+  .ds-label { font-size: 0.75rem; color: var(--color-text-secondary); margin-top: 6px; }
+  .ds-value { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.6875rem; color: #616161; margin-top: 2px; }
+
+  /* ── COLOR SWATCHES ── */
+  .swatch {
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .swatch-box {
+    width: 80px;
+    height: 56px;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(0,0,0,0.08);
+    margin-bottom: 6px;
+  }
+  .swatch-group { margin-bottom: 2rem; }
+  .swatch-group-label { font-size: 0.8125rem; font-weight: 600; margin-bottom: 12px; color: var(--color-text-secondary); }
+
+  /* ── TYPOGRAPHY SPECIMENS ── */
+  .type-row {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: var(--radius-xl);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: baseline;
+    gap: 1.5rem;
+  }
+  .type-meta {
+    min-width: 180px;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    font-family: 'SF Mono', monospace;
+    line-height: 1.7;
+    flex-shrink: 0;
+  }
+
+  /* ── COMPONENT CARDS ── */
+  .ds-card {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: var(--radius-xl);
+    padding: 2rem;
+    margin-bottom: 1rem;
+  }
+  .ds-card-title { font-size: 0.8125rem; font-weight: 700; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1.25rem; }
+
+  /* ── GRID ── */
+  .ds-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .ds-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .ds-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+
+  /* ═══════════════════════════════════════════════════
+     ACTUAL TANGERINE COMPONENTS
+  ═══════════════════════════════════════════════════ */
+
+  /* ── BUTTONS ── */
+  .tng-btn {
+    background-color: var(--color-orange);
+    border: none;
+    border-radius: var(--radius-2xl);   /* 1.5rem — from CSS */
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    font-family: var(--font-family);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.5rem;
+    padding: 0.75rem 1.5rem;
+    text-align: center;
+    text-decoration: none;
+    color: var(--color-text-white);
+    transition: background-color 0.15s ease;
+  }
+  .tng-btn:hover { background-color: var(--color-orange-hover); }
+
+  .tng-btn--secondary {
+    background-color: var(--color-bg-white);
+    border: 0.0625rem solid var(--color-text-primary);
+    color: var(--color-text-primary);
+  }
+  .tng-btn--secondary:hover { background-color: var(--color-bg-light); }
+
+  .tng-btn--ghost {
+    background-color: transparent;
+    border: none;
+    color: var(--color-orange);
+    padding: 0.75rem 1rem;
+  }
+  .tng-btn--ghost:hover { color: var(--color-orange-hover); background: transparent; }
+
+  .tng-btn--dark {
+    background-color: var(--color-dark);
+    color: var(--color-text-white);
+  }
+  .tng-btn--dark:hover { background-color: var(--color-dark-medium); }
+
+  .tng-btn--sm {
+    font-size: 1rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: var(--radius-full);
+  }
+  .tng-btn--lg {
+    font-size: 1.1875rem;
+    padding: 1rem 2rem;
+  }
+  .tng-btn--disabled {
+    background-color: var(--color-text-disabled);
+    color: var(--color-text-white);
+    cursor: not-allowed;
+  }
+  .tng-btn--disabled:hover { background-color: var(--color-text-disabled); }
+
+  /* ── LINK ── */
+  .tng-link {
+    color: var(--color-text-link);
+    text-decoration: underline;
+    font-family: var(--font-family);
+    cursor: pointer;
+  }
+  .tng-link:hover { color: #075bbc; }
+  .tng-link--orange { color: var(--color-orange); }
+  .tng-link--orange:hover { color: var(--color-orange-hover); }
+
+  /* ── TYPOGRAPHY CLASSES ── */
+  .tng-h1 { font-size: var(--text-h1-size); font-weight: var(--text-h1-weight); line-height: var(--text-h1-line); font-family: var(--font-family); color: var(--color-text-primary); margin-bottom: 0.5rem; }
+  .tng-h2 { font-size: var(--text-h2-size); font-weight: var(--text-h2-weight); line-height: var(--text-h2-line); font-family: var(--font-family); color: var(--color-text-primary); margin-bottom: 0.5rem; }
+  .tng-h3 { font-size: var(--text-h3-size); font-weight: var(--text-h3-weight); line-height: var(--text-h3-line); font-family: var(--font-family); color: var(--color-text-primary); margin-bottom: 0.5rem; }
+  .tng-h4 { font-size: var(--text-h4-size); font-weight: var(--text-h4-weight); line-height: var(--text-h4-line); font-family: var(--font-family); color: var(--color-text-primary); margin-bottom: 0.5rem; }
+  .tng-h5 { font-size: var(--text-h5-size); font-weight: var(--text-h5-weight); line-height: var(--text-h5-line); font-family: var(--font-family); color: var(--color-text-primary); margin-bottom: 0.5rem; }
+  .tng-h6 { font-size: var(--text-h6-size); font-weight: var(--text-h6-weight); line-height: var(--text-h6-line); font-family: var(--font-family); color: var(--color-text-primary); margin-bottom: 0.5rem; }
+  .tng-body-lg         { font-size: 1.125rem; font-weight: 400; line-height: 1.5rem; }
+  .tng-body-lg-semibold{ font-size: 1.125rem; font-weight: 500; line-height: 1.5rem; }
+  .tng-body-md         { font-size: 1rem;     font-weight: 400; line-height: 1.5rem; }
+  .tng-body-sm         { font-size: 0.875rem; font-weight: 400; line-height: 1.25rem; }
+  .tng-body-xs         { font-size: 0.75rem;  font-weight: 400; line-height: 1rem; }
+
+  /* ── CARD ── */
+  .tng-card {
+    background: var(--color-bg-white);
+    border: 1px solid #e0e0e0;
+    border-radius: var(--radius-xl);  /* 1rem */
+    padding: 1.5rem;
+    transition: box-shadow 0.2s ease;
+  }
+  .tng-card:hover { box-shadow: var(--shadow-card); }
+
+  .tng-card--orange  { background: var(--color-bg-orange); border-color: #fbc02d; }
+  .tng-card--green   { background: var(--color-bg-green);  border-color: #a5d6a7; }
+  .tng-card--red     { background: var(--color-bg-red);    border-color: #ef9a9a; }
+  .tng-card--yellow  { background: var(--color-bg-yellow); border-color: #f9e077; }
+  .tng-card--blue    { background: var(--color-bg-blue);   border-color: #90caf9; }
+  .tng-card--dark    { background: var(--color-dark);      border-color: var(--color-dark); color: var(--color-text-white); }
+
+  .tng-card--rounded { border-radius: var(--radius-2xl); } /* 1.5rem — used on flip cards */
+
+  /* ── BADGE ── */
+  .tng-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 0.25rem 0.75rem;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+    font-weight: 600;
+    font-family: var(--font-family);
+  }
+  .tng-badge--orange { background: var(--color-bg-orange); color: var(--color-orange); }
+  .tng-badge--green  { background: var(--color-bg-green-alt); color: var(--color-success); }
+  .tng-badge--red    { background: var(--color-bg-red); color: var(--color-error); }
+  .tng-badge--yellow { background: var(--color-bg-yellow); color: var(--color-warning); }
+  .tng-badge--blue   { background: var(--color-bg-blue); color: var(--color-info); }
+  .tng-badge--dark   { background: var(--color-dark); color: var(--color-text-white); }
+  .tng-badge--gray   { background: var(--color-bg-light); color: var(--color-text-secondary); }
+
+  /* ── ALERT / NOTIFICATION ── */
+  .tng-alert {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius-lg);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    font-family: var(--font-family);
+  }
+  .tng-alert__icon { font-size: 1.125rem; flex-shrink: 0; }
+  .tng-alert--info    { background: var(--color-bg-blue);   border: 1px solid #90caf9; color: #075bbc; }
+  .tng-alert--success { background: var(--color-bg-green);  border: 1px solid #a5d6a7; color: var(--color-success); }
+  .tng-alert--warning { background: var(--color-bg-yellow); border: 1px solid #f9e077; color: var(--color-warning); }
+  .tng-alert--error   { background: var(--color-bg-red);    border: 1px solid #ef9a9a; color: var(--color-error); }
+  .tng-alert--orange  { background: var(--color-bg-orange); border: 1px solid #feac5b; color: var(--color-orange-dark); }
+
+  /* ── FORM: INPUT ── */
+  .tng-input-group { display: flex; flex-direction: column; gap: 6px; }
+  .tng-label { font-size: 0.9375rem; font-weight: 500; color: var(--color-text-primary); font-family: var(--font-family); }
+  .tng-input {
+    width: 100%;
+    height: 3rem;
+    padding: 0 1rem;
+    border: 0.0625rem solid var(--color-text-primary);
+    border-radius: var(--radius-sm);   /* 0.25rem from CSS */
+    font-family: var(--font-family);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    background: var(--color-bg-white);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .tng-input:focus { border-color: var(--color-orange); box-shadow: 0 0 0 2px rgba(242, 105, 29, 0.15); }
+  .tng-input:disabled { background: var(--color-bg-subtle); color: var(--color-text-disabled); border-color: var(--color-text-disabled); }
+  .tng-input--error { border-color: var(--color-error); }
+  .tng-helper { font-size: 0.875rem; color: var(--color-text-secondary); }
+  .tng-helper--error { color: var(--color-error); }
+
+  /* ── FORM: SELECT ── */
+  .tng-select {
+    width: 100%;
+    height: 3rem;
+    padding: 0 2.5rem 0 1rem;
+    border: 0.0625rem solid var(--color-text-primary);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-family);
+    font-size: 1rem;
+    color: var(--color-text-primary);
+    background: var(--color-bg-white);
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%233a3835' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    cursor: pointer;
+    outline: none;
+  }
+  .tng-select:focus { border-color: var(--color-orange); }
+
+  /* ── FORM: CHECKBOX & RADIO ── */
+  .tng-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: var(--font-family);
+    font-size: 1rem;
+  }
+  .tng-check input { display: none; }
+  .tng-check__box {
+    width: 20px; height: 20px;
+    border: 2px solid var(--color-text-primary);
+    border-radius: var(--radius-xs);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: white;
+    transition: all 0.15s;
+  }
+  .tng-check input:checked ~ .tng-check__box {
+    background: var(--color-orange);
+    border-color: var(--color-orange);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .tng-check input:checked ~ .tng-check__box::after { content: '✓'; }
+
+  .tng-radio__circle {
+    width: 20px; height: 20px;
+    border: 2px solid var(--color-text-primary);
+    border-radius: var(--radius-full);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: white;
+    transition: all 0.15s;
+  }
+  .tng-check input:checked ~ .tng-radio__circle { border-color: var(--color-orange); }
+  .tng-check input:checked ~ .tng-radio__circle::after {
+    content: '';
+    width: 10px; height: 10px;
+    background: var(--color-orange);
+    border-radius: 50%;
+  }
+
+  /* ── TOGGLE ── */
+  .tng-toggle {
+    width: 48px; height: 28px;
+    background: var(--color-text-disabled);
+    border-radius: var(--radius-full);
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    flex-shrink: 0;
+    border: none;
+  }
+  .tng-toggle.on { background: var(--color-orange); }
+  .tng-toggle::after {
+    content: '';
+    position: absolute;
+    width: 22px; height: 22px;
+    background: white;
+    border-radius: 50%;
+    top: 3px; left: 3px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+  .tng-toggle.on::after { transform: translateX(20px); }
+
+  /* ── PROGRESS BAR ── */
+  .tng-progress { background: var(--color-bg-light); border-radius: var(--radius-full); overflow: hidden; }
+  .tng-progress__fill {
+    height: 100%;
+    background: var(--color-orange);
+    border-radius: var(--radius-full);
+    transition: width 0.4s ease;
+  }
+  .tng-progress--sm { height: 4px; }
+  .tng-progress--md { height: 8px; }
+  .tng-progress--lg { height: 12px; }
+
+  /* ── TABS ── */
+  .tng-tabs { border-bottom: 1px solid #e0e0e0; display: flex; gap: 0; }
+  .tng-tab {
+    padding: 0.75rem 1.25rem;
+    font-family: var(--font-family);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1px;
+    background: none;
+    border-top: none; border-left: none; border-right: none;
+    transition: all 0.15s;
+  }
+  .tng-tab:hover { color: var(--color-text-primary); }
+  .tng-tab.active { color: var(--color-orange); border-bottom-color: var(--color-orange); font-weight: 700; }
+
+  /* ── NAV / HEADER ── */
+  .tng-topnav {
+    background: var(--color-bg-white);
+    border-bottom: 1px solid #e0e0e0;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    gap: 2rem;
+  }
+  .tng-topnav__logo { font-size: 1.25rem; font-weight: 700; color: var(--color-orange); }
+  .tng-topnav__links { display: flex; gap: 1.5rem; flex: 1; }
+  .tng-topnav__link {
+    font-family: var(--font-family);
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    text-decoration: none;
+    padding: 0.5rem 0;
+    border-bottom: 2px solid transparent;
+  }
+  .tng-topnav__link:hover { color: var(--color-orange); }
+  .tng-topnav__link.active { border-bottom-color: var(--color-orange); color: var(--color-orange); }
+
+  /* ── RADIUS DEMO ── */
+  .radius-box {
+    width: 64px; height: 64px;
+    background: var(--color-orange);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  /* ── SPACING DEMO ── */
+  .space-demo {
+    background: var(--color-orange);
+    height: 20px;
+    border-radius: 2px;
+  }
+
+  /* ── SHADOW DEMO ── */
+  .shadow-box {
+    background: white;
+    border-radius: var(--radius-xl);
+    padding: 1rem;
+    text-align: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    width: 120px;
+  }
+
+  /* ── SECTION NAV ── */
+  .ds-toc {
+    position: fixed;
+    right: 2rem;
+    top: 120px;
+    width: 160px;
+    font-size: 0.75rem;
+    display: none;
+  }
+  @media (min-width: 1400px) { .ds-toc { display: block; } }
+  .ds-toc-title { font-weight: 700; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--color-text-secondary); margin-bottom: 12px; }
+  .ds-toc a { display: block; padding: 4px 0; color: var(--color-text-secondary); text-decoration: none; border-left: 2px solid #e0e0e0; padding-left: 10px; }
+  .ds-toc a:hover { color: var(--color-orange); border-color: var(--color-orange); }
+
+  /* ── HERO SECTION ── */
+  .ds-hero {
+    background: var(--color-dark);
+    color: var(--color-text-white);
+    padding: 3rem 2rem;
+    border-radius: var(--radius-2xl);
+    margin-bottom: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+  .ds-hero h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; }
+  .ds-hero p { color: #bdbdbd; font-size: 1rem; }
+  .ds-hero-badge {
+    background: var(--color-orange);
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 700;
+    padding: 0.5rem 1rem;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+  }
+
+  code {
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 0.75rem;
+    background: var(--color-bg-light);
+    border: 1px solid #e0e0e0;
+    padding: 1px 6px;
+    border-radius: 4px;
+    color: var(--color-dark);
+  }
+</style>
+</head>
+<body>
+
+<!-- ── DS NAV ── -->
+<nav class="ds-nav">
+  <div class="ds-nav-logo">🍊 Tangerine Design System</div>
+  <div class="ds-nav-links">
+    <a href="#colors">Colors</a>
+    <a href="#type">Typography</a>
+    <a href="#spacing">Spacing</a>
+    <a href="#buttons">Buttons</a>
+    <a href="#cards">Cards</a>
+    <a href="#forms">Forms</a>
+    <a href="#components">Components</a>
+  </div>
+</nav>
+
+<!-- ── TOC ── -->
+<div class="ds-toc">
+  <div class="ds-toc-title">Contents</div>
+  <a href="#colors">Colors</a>
+  <a href="#type">Typography</a>
+  <a href="#spacing">Spacing & Radius</a>
+  <a href="#buttons">Buttons</a>
+  <a href="#badges">Badges</a>
+  <a href="#alerts">Alerts</a>
+  <a href="#cards">Cards</a>
+  <a href="#forms">Forms</a>
+  <a href="#nav">Navigation</a>
+  <a href="#components">Components</a>
+</div>
+
+<div class="ds-page">
+
+  <!-- HERO -->
+  <div class="ds-hero">
+    <div>
+      <h1>Tangerine Design System</h1>
+      <p>Design tokens, components, and patterns — extracted directly from tangerine.ca</p>
+      <p style="margin-top:8px;font-size:0.875rem;">Font: <code style="background:#444;border-color:#555;color:#fff">TangerineCircular, Arial, Helvetica, sans-serif</code></p>
+    </div>
+    <div class="ds-hero-badge">v1.0 · May 2026</div>
+  </div>
+
+
+  <!-- ═══ COLORS ═══ -->
+  <section class="ds-section" id="colors">
+    <div class="ds-section-title">Color Palette</div>
+
+    <div class="ds-card">
+      <div class="ds-card-title">Brand</div>
+      <div class="ds-row">
+        <div class="swatch">
+          <div class="swatch-box" style="background:#f2691d"></div>
+          <div class="ds-label">Orange</div>
+          <div class="ds-value">#f2691d</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#e65100"></div>
+          <div class="ds-label">Orange Hover</div>
+          <div class="ds-value">#e65100</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#cc5310"></div>
+          <div class="ds-label">Orange Dark</div>
+          <div class="ds-value">#cc5310</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#feac5b"></div>
+          <div class="ds-label">Orange Light</div>
+          <div class="ds-value">#feac5b</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#fff5ec;border:1px solid #e0e0e0"></div>
+          <div class="ds-label">Orange Pale</div>
+          <div class="ds-value">#fff5ec</div>
+        </div>
+      </div>
+
+      <div class="ds-card-title" style="margin-top:1.5rem">Neutrals</div>
+      <div class="ds-row">
+        <div class="swatch">
+          <div class="swatch-box" style="background:#3a3835"></div>
+          <div class="ds-label">Dark / Text</div>
+          <div class="ds-value">#3a3835</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#424242"></div>
+          <div class="ds-label">Dark Medium</div>
+          <div class="ds-value">#424242</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#616161"></div>
+          <div class="ds-label">Secondary</div>
+          <div class="ds-value">#616161</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#bdbdbd"></div>
+          <div class="ds-label">Disabled</div>
+          <div class="ds-value">#bdbdbd</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#e0e0e0"></div>
+          <div class="ds-label">Border</div>
+          <div class="ds-value">#e0e0e0</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#f7f7f7;border:1px solid #e0e0e0"></div>
+          <div class="ds-label">BG Light</div>
+          <div class="ds-value">#f7f7f7</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#fafafa;border:1px solid #e0e0e0"></div>
+          <div class="ds-label">BG Subtle</div>
+          <div class="ds-value">#fafafa</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#ffffff;border:1px solid #e0e0e0"></div>
+          <div class="ds-label">White</div>
+          <div class="ds-value">#ffffff</div>
+        </div>
+      </div>
+
+      <div class="ds-card-title" style="margin-top:1.5rem">Semantic</div>
+      <div class="ds-row">
+        <div class="swatch">
+          <div class="swatch-box" style="background:#006fd6"></div>
+          <div class="ds-label">Link Blue</div>
+          <div class="ds-value">#006fd6</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#e1eff7;border:1px solid #90caf9"></div>
+          <div class="ds-label">Blue BG</div>
+          <div class="ds-value">#e1eff7</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#2e7d31"></div>
+          <div class="ds-label">Success</div>
+          <div class="ds-value">#2e7d31</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#f3f8f3;border:1px solid #a5d6a7"></div>
+          <div class="ds-label">Success BG</div>
+          <div class="ds-value">#f3f8f3</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#d50000"></div>
+          <div class="ds-label">Error</div>
+          <div class="ds-value">#d50000</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#fcf0f0;border:1px solid #ef9a9a"></div>
+          <div class="ds-label">Error BG</div>
+          <div class="ds-value">#fcf0f0</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#8b6400"></div>
+          <div class="ds-label">Warning</div>
+          <div class="ds-value">#8b6400</div>
+        </div>
+        <div class="swatch">
+          <div class="swatch-box" style="background:#fff9c4;border:1px solid #f9e077"></div>
+          <div class="ds-label">Warning BG</div>
+          <div class="ds-value">#fff9c4</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ TYPOGRAPHY ═══ -->
+  <section class="ds-section" id="type">
+    <div class="ds-section-title">Typography — TangerineCircular</div>
+
+    <div class="ds-card">
+      <div class="ds-card-title">Headings</div>
+
+      <div class="type-row">
+        <div class="type-meta">H1<br>2rem · 700<br>line-height 2.5rem<br><code>.tng-h1</code></div>
+        <div class="tng-h1">Build my first financial roadmap</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">H2<br>1.75rem · 700<br>line-height 2.5rem<br><code>.tng-h2</code></div>
+        <div class="tng-h2">Your paycheque, explained</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">H3<br>1.5rem · 700<br>line-height 2rem<br><code>.tng-h3</code></div>
+        <div class="tng-h3">Bank fees and account fit</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">H4<br>1.375rem · 500<br>line-height 2rem<br><code>.tng-h4</code></div>
+        <div class="tng-h4">RRSP matching walkthrough</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">H5<br>1.25rem · 700<br>line-height 1.5rem<br><code>.tng-h5</code></div>
+        <div class="tng-h5">Credit card upgrade path</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">H6<br>1.125rem · 700<br>line-height 1.5rem<br><code>.tng-h6</code></div>
+        <div class="tng-h6">First-year financial roadmap</div>
+      </div>
+
+      <div class="ds-card-title" style="margin-top:2rem">Body</div>
+
+      <div class="type-row">
+        <div class="type-meta">Body Large<br>1.125rem · 400<br>line-height 1.5rem<br><code>.tng-body-lg</code></div>
+        <div class="tng-body-lg">No jargon, no upselling, no judgment. Plain language so you actually understand what's happening with your money.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Body Large Semibold<br>1.125rem · 500<br><code>.tng-body-lg-semibold</code></div>
+        <div class="tng-body-lg-semibold">Up to $1,944/year in free employer contributions.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Body Medium<br>1rem · 400<br>line-height 1.5rem<br><code>.tng-body-md</code></div>
+        <div class="tng-body-md">Your student chequing account now charges a monthly fee since you graduated. That's $203/year for no benefit.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Body Small<br>0.875rem · 400<br>line-height 1.25rem<br><code>.tng-body-sm</code></div>
+        <div class="tng-body-sm">Source: Tangerine account comparison, May 2026. All figures are estimates based on sample data.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-meta">Body XS<br>0.75rem · 400<br>line-height 1rem<br><code>.tng-body-xs</code></div>
+        <div class="tng-body-xs">Pathfinder never sells your data or shares it without your explicit consent. Read-only access — no transactions.</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ SPACING + RADIUS ═══ -->
+  <section class="ds-section" id="spacing">
+    <div class="ds-section-title">Spacing &amp; Border Radius</div>
+
+    <div class="ds-grid-2" style="gap:1rem;margin-bottom:1rem">
+      <div class="ds-card">
+        <div class="ds-card-title">Spacing Scale</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:4px"></div>
+            <code>--space-1</code><span class="ds-value">0.25rem · 4px</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:8px"></div>
+            <code>--space-2</code><span class="ds-value">0.5rem · 8px</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:12px"></div>
+            <code>--space-3</code><span class="ds-value">0.75rem · 12px</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:16px"></div>
+            <code>--space-4</code><span class="ds-value">1rem · 16px</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:20px"></div>
+            <code>--space-5</code><span class="ds-value">1.25rem · 20px</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:24px"></div>
+            <code>--space-6</code><span class="ds-value">1.5rem · 24px</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:32px"></div>
+            <code>--space-8</code><span class="ds-value">2rem · 32px</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:40px"></div>
+            <code>--space-10</code><span class="ds-value">2.5rem · 40px</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:48px"></div>
+            <code>--space-12</code><span class="ds-value">3rem · 48px</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px">
+            <div class="space-demo" style="width:64px"></div>
+            <code>--space-16</code><span class="ds-value">4rem · 64px</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ds-card">
+        <div class="ds-card-title">Border Radius</div>
+        <div class="ds-row" style="flex-wrap:wrap">
+          <div style="text-align:center">
+            <div class="radius-box" style="border-radius:0.125rem">XS<br>2px</div>
+            <div class="ds-value" style="text-align:center;margin-top:4px">--radius-xs</div>
+          </div>
+          <div style="text-align:center">
+            <div class="radius-box" style="border-radius:0.25rem">SM<br>4px</div>
+            <div class="ds-value" style="text-align:center;margin-top:4px">--radius-sm</div>
+          </div>
+          <div style="text-align:center">
+            <div class="radius-box" style="border-radius:0.5rem">MD<br>8px</div>
+            <div class="ds-value" style="text-align:center;margin-top:4px">--radius-md</div>
+          </div>
+          <div style="text-align:center">
+            <div class="radius-box" style="border-radius:0.75rem">LG<br>12px</div>
+            <div class="ds-value" style="text-align:center;margin-top:4px">--radius-lg</div>
+          </div>
+          <div style="text-align:center">
+            <div class="radius-box" style="border-radius:1rem">XL<br>16px</div>
+            <div class="ds-value" style="text-align:center;margin-top:4px">--radius-xl</div>
+          </div>
+          <div style="text-align:center">
+            <div class="radius-box" style="border-radius:1.5rem">2XL<br>24px</div>
+            <div class="ds-value" style="text-align:center;margin-top:4px">--radius-2xl</div>
+          </div>
+          <div style="text-align:center">
+            <div class="radius-box" style="border-radius:9999px">Pill</div>
+            <div class="ds-value" style="text-align:center;margin-top:4px">--radius-full</div>
+          </div>
+        </div>
+
+        <div class="ds-card-title" style="margin-top:1.5rem">Shadows</div>
+        <div class="ds-row">
+          <div class="shadow-box" style="box-shadow:0 1px 4px rgba(0,0,0,0.08)">
+            <div style="font-size:0.6875rem;font-weight:700;margin-bottom:4px">Shadow SM</div>
+            <code style="font-size:0.6rem">0 1px 4px rgba(0,0,0,0.08)</code>
+          </div>
+          <div class="shadow-box" style="box-shadow:0 2px 12px rgba(0,0,0,0.10)">
+            <div style="font-size:0.6875rem;font-weight:700;margin-bottom:4px">Shadow MD</div>
+            <code style="font-size:0.6rem">0 2px 12px rgba(0,0,0,0.10)</code>
+          </div>
+          <div class="shadow-box" style="box-shadow:0 0 20px 0 rgba(0,0,0,0.20)">
+            <div style="font-size:0.6875rem;font-weight:700;margin-bottom:4px">Card Hover</div>
+            <code style="font-size:0.6rem">0 0 20px 0 rgba(0,0,0,0.2)</code>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ BUTTONS ═══ -->
+  <section class="ds-section" id="buttons">
+    <div class="ds-section-title">Buttons</div>
+
+    <div class="ds-card">
+      <div class="ds-card-title">Variants</div>
+      <div class="ds-row" style="align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:1.5rem">
+        <button class="tng-btn">Primary</button>
+        <button class="tng-btn tng-btn--secondary">Secondary</button>
+        <button class="tng-btn tng-btn--dark">Dark</button>
+        <button class="tng-btn tng-btn--ghost">Ghost →</button>
+        <button class="tng-btn tng-btn--disabled" disabled>Disabled</button>
+      </div>
+
+      <div class="ds-card-title">Sizes</div>
+      <div class="ds-row" style="align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:1.5rem">
+        <button class="tng-btn tng-btn--sm">Small button</button>
+        <button class="tng-btn">Default</button>
+        <button class="tng-btn tng-btn--lg">Large button</button>
+      </div>
+
+      <div class="ds-card-title">Specs</div>
+      <div style="font-size:0.875rem;color:var(--color-text-secondary);line-height:2">
+        Primary: <code>bg #f2691d</code> · <code>hover #e65100</code> · <code>border-radius 1.5rem</code> · <code>padding 0.75rem 1.5rem</code> · <code>font-weight 700</code> · <code>font-size 1.25rem</code><br>
+        Secondary: <code>bg #fff</code> · <code>border 1px solid #3a3835</code> · <code>color #3a3835</code>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ BADGES ═══ -->
+  <section class="ds-section" id="badges">
+    <div class="ds-section-title">Badges</div>
+
+    <div class="ds-card">
+      <div class="ds-row" style="align-items:center;flex-wrap:wrap;gap:10px">
+        <span class="tng-badge tng-badge--orange">Orange</span>
+        <span class="tng-badge tng-badge--green">Success</span>
+        <span class="tng-badge tng-badge--red">Error</span>
+        <span class="tng-badge tng-badge--yellow">Warning</span>
+        <span class="tng-badge tng-badge--blue">Info</span>
+        <span class="tng-badge tng-badge--dark">Dark</span>
+        <span class="tng-badge tng-badge--gray">Neutral</span>
+      </div>
+      <div style="margin-top:12px;font-size:0.875rem;color:var(--color-text-secondary)">
+        All badges use <code>border-radius: 9999px</code> · <code>padding: 0.25rem 0.75rem</code> · <code>font-size: 0.75rem</code> · <code>font-weight: 600</code>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ ALERTS ═══ -->
+  <section class="ds-section" id="alerts">
+    <div class="ds-section-title">Alerts &amp; Notifications</div>
+
+    <div class="ds-card">
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="tng-alert tng-alert--info">
+          <div class="tng-alert__icon">ℹ️</div>
+          <div><strong>Info:</strong> Your RRSP contribution room for 2026 is estimated at $11,664 based on your income.</div>
+        </div>
+        <div class="tng-alert tng-alert--success">
+          <div class="tng-alert__icon">✅</div>
+          <div><strong>Success:</strong> RRSP enrolment submitted. Employer matching will start on your next paycheque.</div>
+        </div>
+        <div class="tng-alert tng-alert--warning">
+          <div class="tng-alert__icon">⚠️</div>
+          <div><strong>Warning:</strong> Pathfinder can explain options but cannot make investment choices for you.</div>
+        </div>
+        <div class="tng-alert tng-alert--error">
+          <div class="tng-alert__icon">🚨</div>
+          <div><strong>Urgent:</strong> RRSP matching deadline in 18 days. Missing it cannot be undone for this period.</div>
+        </div>
+        <div class="tng-alert tng-alert--orange">
+          <div class="tng-alert__icon">🍊</div>
+          <div><strong>Note:</strong> Currently showing Angel's sample data. Link your accounts for a personalized plan.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ CARDS ═══ -->
+  <section class="ds-section" id="cards">
+    <div class="ds-section-title">Cards</div>
+
+    <div class="ds-grid-3" style="margin-bottom:1rem">
+      <div class="tng-card">
+        <div style="font-size:1.5rem;margin-bottom:8px">💰</div>
+        <div class="tng-h5" style="margin-bottom:4px">Take-home pay</div>
+        <div style="font-size:1.75rem;font-weight:700;color:var(--color-text-primary)">$2,418</div>
+        <div class="tng-body-sm" style="color:var(--color-text-secondary);margin-bottom:12px">of $3,240 gross</div>
+        <button class="tng-btn tng-btn--sm" style="font-size:0.875rem">Explain this →</button>
+      </div>
+      <div class="tng-card tng-card--orange">
+        <div style="font-size:1.5rem;margin-bottom:8px">🏦</div>
+        <div class="tng-h5" style="margin-bottom:4px">Bank fees</div>
+        <div style="font-size:1.75rem;font-weight:700;color:var(--color-orange)">$16.95</div>
+        <div class="tng-body-sm" style="color:var(--color-text-secondary);margin-bottom:12px">per month — avoidable</div>
+        <button class="tng-btn tng-btn--sm" style="font-size:0.875rem">Free options →</button>
+      </div>
+      <div class="tng-card tng-card--green">
+        <div style="font-size:1.5rem;margin-bottom:8px">📈</div>
+        <div class="tng-h5" style="margin-bottom:4px">RRSP match</div>
+        <div style="font-size:1.75rem;font-weight:700;color:var(--color-success)">$1,944</div>
+        <div class="tng-body-sm" style="color:var(--color-text-secondary);margin-bottom:12px">free/year from employer</div>
+        <button class="tng-btn tng-btn--sm" style="font-size:0.875rem">Start walkthrough →</button>
+      </div>
+    </div>
+
+    <div class="ds-grid-2">
+      <div class="tng-card tng-card--dark" style="color:white">
+        <div class="tng-h5" style="color:white;margin-bottom:8px">Dark card</div>
+        <p style="color:#bdbdbd;font-size:0.9375rem">Used for featured or high-contrast content areas.</p>
+      </div>
+      <div class="tng-card tng-card--rounded" style="border-color:var(--color-orange)">
+        <div class="tng-h5" style="margin-bottom:8px">Rounded card (2xl)</div>
+        <p class="tng-body-md" style="color:var(--color-text-secondary)">Used on flip cards and modals. <code>border-radius: 1.5rem</code></p>
+      </div>
+    </div>
+
+    <div style="margin-top:12px;font-size:0.875rem;color:var(--color-text-secondary);background:white;border:1px solid #e0e0e0;border-radius:var(--radius-xl);padding:1rem">
+      Card base: <code>border-radius: 1rem</code> · <code>border: 1px solid #e0e0e0</code> · hover shadow: <code>0 0 20px 0 rgba(0,0,0,0.2)</code>
+    </div>
+  </section>
+
+
+  <!-- ═══ FORMS ═══ -->
+  <section class="ds-section" id="forms">
+    <div class="ds-section-title">Form Elements</div>
+
+    <div class="ds-grid-2">
+      <div class="ds-card">
+        <div class="ds-card-title">Text Input</div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="tng-input-group">
+            <label class="tng-label">Annual salary</label>
+            <input class="tng-input" type="text" placeholder="e.g. $64,800" />
+            <div class="tng-helper">Used to calculate your RRSP contribution room.</div>
+          </div>
+          <div class="tng-input-group">
+            <label class="tng-label">Email</label>
+            <input class="tng-input tng-input--error" type="email" value="angel@" />
+            <div class="tng-helper tng-helper--error">Please enter a valid email address.</div>
+          </div>
+          <div class="tng-input-group">
+            <label class="tng-label">Disabled field</label>
+            <input class="tng-input" type="text" disabled placeholder="Not available" />
+          </div>
+        </div>
+        <div style="margin-top:12px;font-size:0.8125rem;color:var(--color-text-secondary)">
+          Input: <code>border-radius: 0.25rem</code> · <code>border: 1px solid #3a3835</code> · focus ring: <code>orange 2px</code>
+        </div>
+      </div>
+
+      <div class="ds-card">
+        <div class="ds-card-title">Select + Toggle + Checks</div>
+        <div style="display:flex;flex-direction:column;gap:16px">
+          <div class="tng-input-group">
+            <label class="tng-label">Financial goal</label>
+            <select class="tng-select">
+              <option>Stop paying bank fees</option>
+              <option>Build emergency fund</option>
+              <option>Capture RRSP match</option>
+            </select>
+          </div>
+
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid #e0e0e0;border-bottom:1px solid #e0e0e0">
+            <div>
+              <div class="tng-body-md" style="font-weight:500">Plain language mode</div>
+              <div class="tng-body-sm" style="color:var(--color-text-secondary)">Avoid jargon in all explanations</div>
+            </div>
+            <button class="tng-toggle on" onclick="this.classList.toggle('on')"></button>
+          </div>
+
+          <label class="tng-check">
+            <input type="checkbox" checked>
+            <span class="tng-check__box"></span>
+            <span class="tng-body-md">Stop paying bank fees</span>
+          </label>
+          <label class="tng-check">
+            <input type="checkbox">
+            <span class="tng-check__box"></span>
+            <span class="tng-body-md">Send money home</span>
+          </label>
+          <label class="tng-check">
+            <input type="radio" name="r1" checked>
+            <span class="tng-radio__circle"></span>
+            <span class="tng-body-md">Newcomer to Canada</span>
+          </label>
+          <label class="tng-check">
+            <input type="radio" name="r1">
+            <span class="tng-radio__circle"></span>
+            <span class="tng-body-md">New graduate</span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ NAVIGATION ═══ -->
+  <section class="ds-section" id="nav">
+    <div class="ds-section-title">Navigation</div>
+
+    <div class="ds-card">
+      <div class="ds-card-title">Top Nav</div>
+      <div class="tng-topnav" style="border-radius:var(--radius-xl);border:1px solid #e0e0e0;margin-bottom:16px">
+        <div class="tng-topnav__logo">🍊 Pathfinder</div>
+        <div class="tng-topnav__links">
+          <a class="tng-topnav__link active" href="#">Dashboard</a>
+          <a class="tng-topnav__link" href="#">Report</a>
+          <a class="tng-topnav__link" href="#">Roadmap</a>
+          <a class="tng-topnav__link" href="#">Settings</a>
+        </div>
+        <button class="tng-btn tng-btn--sm">Become a client</button>
+      </div>
+
+      <div class="ds-card-title" style="margin-top:1rem">Tabs</div>
+      <div class="tng-tabs" style="margin-bottom:12px">
+        <button class="tng-tab active">Personal</button>
+        <button class="tng-tab" onclick="document.querySelectorAll('.tng-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Business</button>
+        <button class="tng-tab" onclick="document.querySelectorAll('.tng-tab').forEach(t=>t.classList.remove('active'));this.classList.add('active')">Learn</button>
+      </div>
+      <div style="font-size:0.875rem;color:var(--color-text-secondary)">
+        Active tab: <code>border-bottom: 3px solid #f2691d</code> · <code>color: #f2691d</code> · <code>font-weight: 700</code>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ═══ COMPONENTS ═══ -->
+  <section class="ds-section" id="components">
+    <div class="ds-section-title">Composite Components</div>
+
+    <div class="ds-grid-2">
+      <div class="ds-card">
+        <div class="ds-card-title">Progress Bar</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <div>
+            <div style="display:flex;justify-content:space-between;font-size:0.875rem;margin-bottom:6px">
+              <span>Roadmap progress</span><span style="color:var(--color-orange);font-weight:600">3/12</span>
+            </div>
+            <div class="tng-progress tng-progress--md">
+              <div class="tng-progress__fill" style="width:25%"></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:0.875rem;margin-bottom:6px">Small</div>
+            <div class="tng-progress tng-progress--sm">
+              <div class="tng-progress__fill" style="width:60%"></div>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:0.875rem;margin-bottom:6px">Large</div>
+            <div class="tng-progress tng-progress--lg">
+              <div class="tng-progress__fill" style="width:80%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ds-card">
+        <div class="ds-card-title">Links</div>
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <a class="tng-link" href="#">Standard link — Learn about RRSPs</a>
+          <a class="tng-link tng-link--orange" href="#">Orange link — See free account options →</a>
+          <div style="font-size:0.875rem;color:var(--color-text-secondary);margin-top:4px">
+            Blue links: <code>#006fd6</code> hover <code>#075bbc</code><br>
+            Orange links: <code>#f2691d</code> hover <code>#e65100</code>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ds-card" style="margin-top:1rem">
+      <div class="ds-card-title">Breakpoints &amp; Grid</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;font-size:0.875rem">
+        <div style="background:var(--color-bg-light);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-weight:700;font-size:1.125rem;color:var(--color-orange)">375px</div>
+          <div style="color:var(--color-text-secondary)">xs</div>
+          <div style="color:var(--color-text-secondary);font-size:0.75rem">gutter: 1rem</div>
+        </div>
+        <div style="background:var(--color-bg-light);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-weight:700;font-size:1.125rem;color:var(--color-orange)">768px</div>
+          <div style="color:var(--color-text-secondary)">small</div>
+          <div style="color:var(--color-text-secondary);font-size:0.75rem">max: 720px · gutter: 1.5rem</div>
+        </div>
+        <div style="background:var(--color-bg-light);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-weight:700;font-size:1.125rem;color:var(--color-orange)">1024px</div>
+          <div style="color:var(--color-text-secondary)">medium</div>
+          <div style="color:var(--color-text-secondary);font-size:0.75rem">max: 960px · gutter: 1.5rem</div>
+        </div>
+        <div style="background:var(--color-bg-light);border-radius:8px;padding:12px;text-align:center">
+          <div style="font-weight:700;font-size:1.125rem;color:var(--color-orange)">1280px</div>
+          <div style="color:var(--color-text-secondary)">large</div>
+          <div style="color:var(--color-text-secondary);font-size:0.75rem">max: 1216px · gutter: 2rem</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /ds-page -->
+
+<script>
+  // Smooth scroll for TOC
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      document.querySelector(a.getAttribute('href'))?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
